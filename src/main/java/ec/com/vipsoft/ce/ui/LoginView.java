@@ -8,6 +8,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.subject.Subject;
 
 import com.vaadin.cdi.CDIView;
@@ -39,6 +40,7 @@ public class LoginView extends VerticalLayout implements View{
 		addComponent(password);
 		addComponent(rememberMe);
 		addComponent(botonLogIn);
+//		Sha256Hash hasher=new Sha256Hash();
 		
 	}
 	@Override
