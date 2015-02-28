@@ -29,13 +29,13 @@ public class MenuView extends VerticalLayout implements View{
 	@Override
 	public void enter(ViewChangeEvent event) {
 	
-		if(SecurityUtils.getSubject().isAuthenticated()){
-			if(!SecurityUtils.getSubject().hasRole("admin")){
-				UI.getCurrent().getNavigator().navigateTo("portal");	
-			}
-		}else{
-			UI.getCurrent().getNavigator().navigateTo("login");
-		}
+//		if(SecurityUtils.getSubject().isAuthenticated()){
+//			if(!SecurityUtils.getSubject().hasRole("admin")){
+//				UI.getCurrent().getNavigator().navigateTo("portal");	
+//			}
+//		}else{
+//			//UI.getCurrent().getNavigator().navigateTo("login");
+//		}
 	}
 	
 

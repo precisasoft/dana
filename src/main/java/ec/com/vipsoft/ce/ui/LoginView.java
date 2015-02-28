@@ -1,6 +1,7 @@
 package ec.com.vipsoft.ce.ui;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -8,7 +9,9 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordMatcher;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
 
 import com.vaadin.cdi.CDIView;
@@ -17,80 +20,75 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-@CDIView("login")
-public class LoginView extends VerticalLayout implements View{
 
+@CDIView("login")
+public class LoginView extends VerticalLayout implements View {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3823202018387876166L;
 	private TextField usuario;
 	private PasswordField password;
 	private Button botonLogIn;
 	private CheckBox rememberMe;
+	@Inject
+	private RegistradorUsuario registradorUsuario;
+
 	public LoginView() {
 		super();
 		setMargin(true);
 		setSpacing(true);
-		usuario=new TextField();
-		password=new PasswordField();
-		botonLogIn=new Button("LOG IN");
-		rememberMe=new CheckBox("remember me");
+		usuario = new TextField();
+		usuario.setInputPrompt("email@domain.com");
+		password = new PasswordField();
+		botonLogIn = new Button("LOG IN");
+		rememberMe = new CheckBox("registrame");
 		addComponent(usuario);
 		addComponent(password);
 		addComponent(rememberMe);
 		addComponent(botonLogIn);
-//		Sha256Hash hasher=new Sha256Hash();
-		
+		// Sha256Hash hasher=new Sha256Hash();
+
 	}
+
 	@Override
 	public void enter(ViewChangeEvent event) {
-		if(SecurityUtils.getSubject().isAuthenticated()){
-			SecurityUtils.getSubject().logout();
-		}
-		
+		// if(SecurityUtils.getSubject().isAuthenticated()){
+		// SecurityUtils.getSubject().logout();
+		// }
+
 	}
+
 	@PostConstruct
-	public void postconstruir(){
-		
+	public void postconstruir() {
+
 		botonLogIn.addClickListener(event -> {
 			System.out.println("se ha hecho click");
-			Subject currentUser = SecurityUtils.getSubject();
-			if ( !currentUser.isAuthenticated() ) {
-			    //collect user principals and credentials in a gui specific manner 
-			    //such as username/password html form, X509 certificate, OpenID, etc.
-			    //We'll use the username/password example here since it is the most common.
-			    UsernamePasswordToken token = new UsernamePasswordToken(usuario.getValue(),password.getValue());
-
-			    //this is all you have to do to support 'remember me' (no config - built in!):
-			  //  
-			    
-			    	token.setRememberMe(rememberMe.getValue());
-			    
-			    try{
-			    currentUser.login(token);
-			    if(currentUser.isAuthenticated()){
-			    	if(currentUser.hasRole("admin")){
-			    		UI.getCurrent().getNavigator().navigateTo("menu");
-			    	}
-			    	if(currentUser.hasRole("guest")){
-			    		UI.getCurrent().getNavigator().navigateTo("portal");
-			    	}
-			    }
-			    }
-			    catch ( UnknownAccountException uae ) {
-			    	Notification.show("No existe la cuenta", Notification.TYPE_ERROR_MESSAGE);
-			    	
-			    } catch ( IncorrectCredentialsException ice ) {
-			        Notification.show("Credenciales incorrectas", Notification.TYPE_ERROR_MESSAGE);
-			    } catch ( LockedAccountException lae ) {
-			    	Notification.show("Cuenta bloqueada", Notification.TYPE_ERROR_MESSAGE);
-			  
-			       
-			    } catch ( AuthenticationException ae ) {
-			    	Notification.show("error", Notification.TYPE_ERROR_MESSAGE);
-			    }
-			
+			if (rememberMe.getValue()) {
+				registradorUsuario.registrarUsuario(usuario.getValue(),	password.getValue(), "", "");
+			} else {
+				UsernamePasswordToken uptoken=new UsernamePasswordToken();
+				uptoken.setPassword(password.getValue().toCharArray());
+				uptoken.setUsername(usuario.getValue());
+				Subject currentUser=SecurityUtils.getSubject();
+				try{
+					currentUser.login(uptoken);
+					if(currentUser.hasRole("operador")){
+						UI.getCurrent().getNavigator().navigateTo("menu");
+					}else{
+						if(currentUser.hasRole("usuario")){
+							UI.getCurrent().getNavigator().navigateTo("portal");
+						}
+					}
+				}catch(AuthenticationException e){
+					Notification.show("error", e.getMessage(),Type.ERROR_MESSAGE);
+				}
 			}
 		});
 	}

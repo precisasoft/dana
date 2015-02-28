@@ -6,7 +6,6 @@ import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 @CDIView("portal")
 public class PortalView extends VerticalLayout implements View{
@@ -22,13 +21,13 @@ public class PortalView extends VerticalLayout implements View{
 	}
 	@Override
 	public void enter(ViewChangeEvent event) {
-		if(SecurityUtils.getSubject().isAuthenticated()){
-			if(!SecurityUtils.getSubject().hasRole("lector")){
-				UI.getCurrent().getNavigator().navigateTo("login");
-			}
-		}else{
-			UI.getCurrent().getNavigator().navigateTo("login");
-		}
+//		if(SecurityUtils.getSubject().isAuthenticated()){
+//			if(!SecurityUtils.getSubject().hasRole("lector")){
+//				UI.getCurrent().getNavigator().navigateTo("login");
+//			}
+//		}else{
+//			UI.getCurrent().getNavigator().navigateTo("login");
+//		}
 		
 	}
 

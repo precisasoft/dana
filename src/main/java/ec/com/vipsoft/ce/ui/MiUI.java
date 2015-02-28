@@ -23,19 +23,18 @@ public class MiUI extends UI {
 		
 		Navigator navigator=new Navigator(this, this);
 		navigator.addProvider(viewProvider);
+		navigator.setErrorView(ErrorView.class);
 		setNavigator(navigator);
-		if(SecurityUtils.getSubject().isAuthenticated()){
-			if(SecurityUtils.getSubject().hasRole("admin")){
-				UI.getCurrent().getNavigator().navigateTo("menu");	
-			}else{
+		if(!SecurityUtils.getSubject().isAuthenticated()){
+			UI.getCurrent().getNavigator().navigateTo("login");
+		}	else{
+			if(SecurityUtils.getSubject().hasRole("operador")){
+				
+			}
+			if(SecurityUtils.getSubject().hasRole("usuario")){
 				UI.getCurrent().getNavigator().navigateTo("portal");
 			}
-			
-		}else{
-			UI.getCurrent().getNavigator().navigateTo("login");
 		}
-		
-		
 
 	}
 
