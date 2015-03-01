@@ -11,6 +11,10 @@ import com.vaadin.ui.VerticalLayout;
 
 @CDIView("menu")
 public class MenuView extends VerticalLayout implements View{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5079435157736277851L;
 	private Button botonFactura;
 	private Button botonSalir;
 
@@ -21,7 +25,9 @@ public class MenuView extends VerticalLayout implements View{
 		botonFactura=new Button("FA");
 		addComponent(botonFactura);
 		botonSalir=new Button("Salir");
-		botonSalir.addClickListener(event -> SecurityUtils.getSubject().logout());
+		botonSalir.addClickListener(event -> {SecurityUtils.getSubject().logout();
+			UI.getCurrent().getNavigator().navigateTo("login");
+		});
 		addComponent(botonSalir);
 		
 	}
