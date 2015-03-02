@@ -9,6 +9,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+import ec.com.vipsoft.erp.gui.componentesbasicos.BotonSalir;
+
 @CDIView("menu")
 public class MenuView extends VerticalLayout implements View{
 	/**
@@ -16,7 +18,7 @@ public class MenuView extends VerticalLayout implements View{
 	 */
 	private static final long serialVersionUID = 5079435157736277851L;
 	private Button botonFactura;
-	private Button botonSalir;
+	private BotonSalir botonSalir;
 
 	public MenuView() {
 		super();
@@ -24,7 +26,7 @@ public class MenuView extends VerticalLayout implements View{
 		setSpacing(true);
 		botonFactura=new Button("FA");
 		addComponent(botonFactura);
-		botonSalir=new Button("Salir");
+		botonSalir=new BotonSalir();
 		botonSalir.addClickListener(event -> {SecurityUtils.getSubject().logout();
 			UI.getCurrent().getNavigator().navigateTo("login");
 		});
