@@ -36,6 +36,13 @@ public class BaseComprobanteElectronicoBinding {
 	@Pattern(regexp="[0-9]{13,13}")
 	protected String rucEmisor;	
 	protected String secuenciaDocumento;
+	private InfoTributariaBinding infoTributaria;
+	public InfoTributariaBinding getInfoTributaria() {
+		if(infoTributaria==null){
+			infoTributaria=new InfoTributariaBinding();
+		}
+		return infoTributaria;
+	}
 		
 	public BaseComprobanteElectronicoBinding() {
 		super();

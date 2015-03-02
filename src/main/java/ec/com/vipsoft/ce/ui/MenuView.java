@@ -5,6 +5,7 @@ import org.apache.shiro.SecurityUtils;
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -19,13 +20,29 @@ public class MenuView extends VerticalLayout implements View{
 	private static final long serialVersionUID = 5079435157736277851L;
 	private Button botonFactura;
 	private BotonSalir botonSalir;
+	private Button botonComprobanteRetencion;
+	private Button botonGuiaRemision;
 
 	public MenuView() {
 		super();
 		setMargin(true);
 		setSpacing(true);
-		botonFactura=new Button("FA");
+		botonFactura=new Button("FACTURACIÓN");
+		botonFactura.setIcon(FontAwesome.USD);
+		botonFactura.addClickListener(event->{
+			UI.getCurrent().getNavigator().navigateTo("FACTURA");
+		});
+		botonComprobanteRetencion=new Button("COMPROBANTE DE RETENCIÓN");
+		botonGuiaRemision=new Button("GUÍA DE REMISIÓN");
+		botonGuiaRemision.setIcon(FontAwesome.CAR);
+		botonComprobanteRetencion.setIcon(FontAwesome.ARROW_CIRCLE_LEFT);
+		botonComprobanteRetencion.addClickListener(event->{
+			UI.getCurrent().getNavigator().navigateTo("CR");
+		});
+		
 		addComponent(botonFactura);
+		addComponent(botonGuiaRemision);
+		addComponent(botonComprobanteRetencion);
 		botonSalir=new BotonSalir();
 		botonSalir.addClickListener(event -> {SecurityUtils.getSubject().logout();
 			UI.getCurrent().getNavigator().navigateTo("login");
