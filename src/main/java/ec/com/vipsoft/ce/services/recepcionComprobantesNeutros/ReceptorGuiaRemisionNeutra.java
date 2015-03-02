@@ -47,6 +47,10 @@ import ec.com.vipsoft.sri.guiaremision._v1_1_0.ObligadoContabilidad;
 @Stateless
 @WebService
 public class ReceptorGuiaRemisionNeutra implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 560815337710340868L;
 	@EJB
 	private GeneradorClaveAccesoPorEntidad generadorClaveAcceso;
 	@Inject

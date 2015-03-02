@@ -24,8 +24,8 @@ public class GeneradorClaveAccesoPorEntidad {
     @EJB
     private VerificadorIndisponibilidad verificadorDisponibilidad;
 
-    @NotNull
-    public String generarClaveAccesoFactura(@NotNull @Pattern(regexp = "[0-9]{13}") String rucEmisor, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoEstablecimiento, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoPuntoVenta) {
+    
+    public String generarClaveAccesoFactura(String rucEmisor,  String codigoEstablecimiento, String codigoPuntoVenta) {
         String claveAcceso = null;
         Query q = em.createQuery("select e from Entidad e where e.ruc=?1");
         q.setParameter(1, rucEmisor);
@@ -55,9 +55,8 @@ public class GeneradorClaveAccesoPorEntidad {
         return claveAcceso;
     }
 
-    @NotNull
-    @Pattern(regexp = "[0-9]{49}")
-    public String generarClaveAccesoComprobanteRetencion(@NotNull @Pattern(regexp = "[0-9]{13}") String rucEmisor, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoEstablecimiento, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoPuntoVenta) {
+    
+    public String generarClaveAccesoComprobanteRetencion( String rucEmisor,  String codigoEstablecimiento,  String codigoPuntoVenta) {
         String claveAcceso = null;
         Query q = em.createQuery("select e from Entidad e where e.ruc=?1");
         q.setParameter(1, rucEmisor);
@@ -87,9 +86,7 @@ public class GeneradorClaveAccesoPorEntidad {
         return claveAcceso;
     }
 
-    @NotNull
-    @Pattern(regexp = "[0-9]{49}")
-    public String generarClaveAccesoGuiaRemision(@NotNull @Pattern(regexp = "[0-9]{13}") String rucEmisor, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoEstablecimiento, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoPuntoVenta) {
+    public String generarClaveAccesoGuiaRemision(String rucEmisor, String codigoEstablecimiento, String codigoPuntoVenta) {
         String claveAcceso = null;
         Query q = em.createQuery("select e from Entidad e where e.ruc=?1");
         q.setParameter(1, rucEmisor);
@@ -119,9 +116,8 @@ public class GeneradorClaveAccesoPorEntidad {
         return claveAcceso;
     }
 
-    @NotNull
-    @Pattern(regexp = "[0-9]{49}")
-    public String generarClaveAccesoNotaCredito(@NotNull @Pattern(regexp = "[0-9]{13}") String rucEmisor, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoEstablecimiento, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoPuntoVenta) {
+    
+    public String generarClaveAccesoNotaCredito( String rucEmisor,  String codigoEstablecimiento, String codigoPuntoVenta) {
         String claveAcceso = null;
         Query q = em.createQuery("select e from Entidad e where e.ruc=?1");
         q.setParameter(1, rucEmisor);
@@ -151,9 +147,7 @@ public class GeneradorClaveAccesoPorEntidad {
         return claveAcceso;
     }
 
-    @NotNull
-    @Pattern(regexp = "[0-9]{49}")
-    public String generarClaveAccesoNotaDebito(@NotNull @Pattern(regexp = "[0-9]{13}") String rucEmisor, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoEstablecimiento, @NotNull @Pattern(regexp = "[0-9]{3}") String codigoPuntoVenta) {
+    public String generarClaveAccesoNotaDebito( String rucEmisor,  String codigoEstablecimiento,  String codigoPuntoVenta) {
         String claveAcceso = null;
         Query q = em.createQuery("select e from Entidad e where e.ruc=?1");
         q.setParameter(1, rucEmisor);
@@ -183,9 +177,7 @@ public class GeneradorClaveAccesoPorEntidad {
         return claveAcceso;
     }
 
-    @NotNull
-    @Pattern(regexp = "[0-9]{49}")
-    public String generarClaveAccesoContingencia(@NotNull @Pattern(regexp = "[0-9]{49}") String claveAccesoNormal) {
+    public String generarClaveAccesoContingencia( String claveAccesoNormal) {
         return generadorReal.generarClaveAccesoContingencia(claveAccesoNormal);
     }
 

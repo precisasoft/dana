@@ -63,8 +63,7 @@ public class ReceptorFacturaNeutra {
 
 	@WebMethod
 	@WebResult(name = "claveAcceso")
-	public String recibirFactura(
-			@FacturaBindingValida @WebParam(name = "factura") FacturaBinding factura) {
+	public String recibirFactura(@WebParam(name = "factura") FacturaBinding factura) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		String claveAcceso = generadorClaveAcceso.generarClaveAccesoFactura(factura.getRucEmisor(), factura.getCodigoEstablecimiento(),	factura.getCodigoPuntoVenta());
