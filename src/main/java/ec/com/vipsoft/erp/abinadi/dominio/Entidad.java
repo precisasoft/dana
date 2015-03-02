@@ -58,10 +58,56 @@ public class Entidad implements Serializable, Comparable<Entidad> {
     private Integer secuenciacanotadebito;
     @Column(name = "seret")
     private Integer secuenciacaretencion;
+    private String nombreReporteFactura;
+    private String nombreReporteRetencion;
+    private String nombreReporteNotaCredito;
+    private String nombreReporteNotaDebito;
+    private String nombreReporteGuiaRemision;
     protected Long secuenciaTransaccion;
     private Boolean usaComprobantesElectronicos;
     private  Boolean habilitado;
-    public Entidad() {
+    
+    public String getNombreReporteFactura() {
+		return nombreReporteFactura;
+	}
+
+	public void setNombreReporteFactura(String nombreReporteFactura) {
+		this.nombreReporteFactura = nombreReporteFactura;
+	}
+
+	public String getNombreReporteRetencion() {
+		return nombreReporteRetencion;
+	}
+
+	public void setNombreReporteRetencion(String nombreReporteRetencion) {
+		this.nombreReporteRetencion = nombreReporteRetencion;
+	}
+
+	public String getNombreReporteNotaCredito() {
+		return nombreReporteNotaCredito;
+	}
+
+	public void setNombreReporteNotaCredito(String nombreReporteNotaCredito) {
+		this.nombreReporteNotaCredito = nombreReporteNotaCredito;
+	}
+
+	public String getNombreReporteNotaDebito() {
+		return nombreReporteNotaDebito;
+	}
+
+	public void setNombreReporteNotaDebito(String nombreReporteNotaDebito) {
+		this.nombreReporteNotaDebito = nombreReporteNotaDebito;
+	}
+
+	public String getNombreReporteGuiaRemision() {
+		return nombreReporteGuiaRemision;
+	}
+
+	public void setNombreReporteGuiaRemision(String nombreReporteGuiaRemision) {
+		this.nombreReporteGuiaRemision = nombreReporteGuiaRemision;
+	}
+
+	public Entidad() {
         secuenciaTransaccion = 1L;
         inicializarSecuenciasCA();
     }
