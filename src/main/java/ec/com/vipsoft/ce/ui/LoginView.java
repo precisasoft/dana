@@ -80,9 +80,12 @@ public class LoginView extends VerticalLayout implements View {
 				try{
 					currentUser.login(uptoken);
 					if(currentUser.hasRole("operador")){
+						//amarrar el login con las variables de usuario
+						
 						UI.getCurrent().getNavigator().navigateTo("menu");
 					}else{
 						if(currentUser.hasRole("usuario")){
+							//no se amarra a ninguna variable ... por lo menos por ahora
 							UI.getCurrent().getNavigator().navigateTo("portal");
 						}
 					}
