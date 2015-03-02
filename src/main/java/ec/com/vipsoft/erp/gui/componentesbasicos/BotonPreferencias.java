@@ -8,7 +8,7 @@ public class BotonPreferencias extends Button {
 	private static final long serialVersionUID = 7690702203749971984L;
 	public BotonPreferencias() {
 		super("preferencias");
-		setIcon(FontAwesome.CHECK_SQUARE_O);
+		setIcon(FontAwesome.WRENCH);
 		setDescription("cambia las preferencias");
 	}
 }

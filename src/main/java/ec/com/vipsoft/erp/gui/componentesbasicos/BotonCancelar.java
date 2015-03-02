@@ -1,5 +1,6 @@
 package ec.com.vipsoft.erp.gui.componentesbasicos;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 
 public class BotonCancelar extends Button{
@@ -10,6 +11,7 @@ public class BotonCancelar extends Button{
 
 	public BotonCancelar() {
 		super("cancelar");
+		setIcon(FontAwesome.UNDO);
 		setDescription("haga click para cancelar");
 		setStyleName("danger");
 		
