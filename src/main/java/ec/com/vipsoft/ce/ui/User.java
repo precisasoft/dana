@@ -26,6 +26,15 @@ public class User implements Serializable {
 	private String password;
 
 	private String tenant;
+	private String correoElectronico;
+	
+	public String getCorreoElectronico() {
+		return correoElectronico;
+	}
+
+	public void setCorreoElectronico(String correoElectronico) {
+		this.correoElectronico = correoElectronico;
+	}
 
 	public User() {
 	}

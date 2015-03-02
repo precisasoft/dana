@@ -9,6 +9,9 @@
     <class>ec.com.vipsoft.ce.ui.UserRole</class>
     <class>ec.com.vipsoft.ce.ui.UserRolePK</class>
     <class>ec.com.vipsoft.ce.ui.User</class>
+    <class>ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico</class>
+    <class>ec.com.vipsoft.ce.backend.model.Contingencia</class>
+    <class>ec.com.vipsoft.ce.backend.model.CalendarioIndisponibilidad</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.ddl-generation" value="create-tables"/>   
