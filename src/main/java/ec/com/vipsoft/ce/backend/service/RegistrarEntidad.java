@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.erp.abinadi.dominio.Establecimiento;
+import ec.com.vipsoft.erp.abinadi.dominio.PuntoVenta;
 
 @Stateless
 @WebService
@@ -17,7 +18,10 @@ public class RegistrarEntidad {
 	private EntityManager em;
 	//@RolesAllowed(value="administrador")
 	public boolean registrarEntidad(@WebParam(name = "entidad") Entidad entidad,Establecimiento establecimiento){
-		establecimiento.setEntidad(entidad);		
+		establecimiento.setEntidad(entidad);	
+		for(PuntoVenta pos:establecimiento.getPos()){
+			pos.setEstablecimiento(establecimiento);
+		}
 		em.persist(entidad);
 		em.persist(establecimiento);
 		return true;

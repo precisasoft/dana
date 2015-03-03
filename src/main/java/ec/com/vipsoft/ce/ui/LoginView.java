@@ -26,6 +26,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
+
 @CDIView("login")
 public class LoginView extends VerticalLayout implements View {
 
@@ -39,6 +41,9 @@ public class LoginView extends VerticalLayout implements View {
 	private CheckBox rememberMe;
 	@Inject
 	private RegistradorUsuario registradorUsuario;
+	
+	@Inject 
+	private UserInfo userInfo;
 
 	public LoginView() {
 		super();

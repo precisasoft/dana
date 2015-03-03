@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 
 /**
@@ -36,11 +37,34 @@ public class PuntoVenta implements Serializable {
     protected Long secuenciaRetencion;
     protected String codigoPuntoVenta;
     protected boolean defaultPuntoVentaElectronico;
-   
+    @ManyToOne
+    protected Establecimiento establecimiento;
+    
+    
+    
+    public Establecimiento getEstablecimiento() {
+		return establecimiento;
+	}
+
+	public void setEstablecimiento(Establecimiento establecimiento) {
+		this.establecimiento = establecimiento;
+	}
+
+	//relaciona al usuario con el punto de venta-
+    protected String usuarioPorDefecto;
+    
 
    
    
-    public Long getSecuenciaNotaDebito() {
+    public String getUsuarioPorDefecto() {
+		return usuarioPorDefecto;
+	}
+
+	public void setUsuarioPorDefecto(String usuarioPorDefecto) {
+		this.usuarioPorDefecto = usuarioPorDefecto;
+	}
+
+	public Long getSecuenciaNotaDebito() {
 		return secuenciaNotaDebito;
 	}
 
