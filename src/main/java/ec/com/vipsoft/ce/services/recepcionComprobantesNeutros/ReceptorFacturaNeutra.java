@@ -35,7 +35,6 @@ import ec.com.vipsoft.ce.backend.service.GeneradorClaveAccesoPorEntidad;
 import ec.com.vipsoft.ce.comprobantesNeutros.FacturaBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.FacturaDetalleBinding;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
-import ec.com.vipsoft.ce.validadores.FacturaBindingValida;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
 import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
@@ -64,6 +63,13 @@ public class ReceptorFacturaNeutra {
 	@WebMethod
 	@WebResult(name = "claveAcceso")
 	public String recibirFactura(@WebParam(name = "factura") FacturaBinding factura) {
+		if((factura.getIdentificacionBeneficiario()==null)||(factura.getIdentificacionBeneficiario().length()<=1)){
+			if(factura.getTotal().doubleValue()<=20d){
+				factura.setIdentificacionBeneficiario("9999999999999");
+				factura.setRazonSocialBeneficiario("USUARIO FINAL");
+				factura.setDireccionBeneficiario("USUARIO FINAL");
+			}
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 		String claveAcceso = generadorClaveAcceso.generarClaveAccesoFactura(factura.getRucEmisor(), factura.getCodigoEstablecimiento(),	factura.getCodigoPuntoVenta());
