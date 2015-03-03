@@ -1,5 +1,6 @@
 package ec.com.vipsoft.ce.comprobantesNeutros;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,11 +9,11 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-public class BaseComprobanteElectronicoBinding {
+import javax.xml.bind.annotation.XmlRootElement;
+@XmlRootElement
+public class BaseComprobanteElectronicoBinding implements Serializable{
 	
-	
-	
+	private static final long serialVersionUID = 4041914625362290164L;
 	protected SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
 	@NotNull(message="este campo no debe ser null")
 	@Pattern(regexp="[0-9]{3}",message="el codigo de establecimiento no cumple con formato 999")
