@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import com.vaadin.cdi.CDIView;
@@ -20,6 +21,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -28,6 +30,8 @@ import com.vaadin.ui.VerticalLayout;
 import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
 import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.ImpuestoRetencion;
+import ec.com.vipsoft.ce.services.recepcionComprobantesNeutros.ReceptorComprobanteRetencionNeutra;
+import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonAnadir;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonCancelar;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonRegistrar;
@@ -43,7 +47,7 @@ public class ComprobanteRetencion extends VerticalLayout implements View {
 	 * 
 	 */
 	private static final long serialVersionUID = 1722007230448590172L;
-private CampoNumeroIdentificacion identificacionBeneficiario;
+	private CampoNumeroIdentificacion identificacionBeneficiario;
 	private CampoRazonSocial razonSocialBeneficiario;
 	private DateField fechaComprobante;
 	private ComboBox tipoDocumento;
@@ -58,7 +62,7 @@ private CampoNumeroIdentificacion identificacionBeneficiario;
 	private ImpuestoRetencion impuestoRetencion;
 	private BigDecimal _baseImponible=new BigDecimal("0.00");	
 	private List<ImpuestoRetencion>detalles;
-
+	private BeanItem<ComprobanteRetencionBinding>bi;
 	
 	
 	@Inject 
@@ -67,8 +71,10 @@ private CampoNumeroIdentificacion identificacionBeneficiario;
 //	private ConversorComprobanteToString conversorComprobanteEnString;
 	private BotonRegistrar botonRegistrar;
 	private BotonCancelar botonCancelar;
-	
-	
+	@EJB
+	private ReceptorComprobanteRetencionNeutra receptorComprobanteRetencionNeutra;
+	@Inject
+	private UtilClaveAcceso utilClaveAcceso;
 	public ComprobanteRetencion() {
 		super();
 		detalles=new ArrayList<ImpuestoRetencion>();
@@ -192,7 +198,7 @@ private CampoNumeroIdentificacion identificacionBeneficiario;
 	//	 campoBaseImponible.setPropertyDataSource(op_baseImponible);
 		 
 		 
-		 BeanItem<ComprobanteRetencionBinding>bi=new BeanItem<ComprobanteRetencionBinding>(comprobante);		 
+		 bi=new BeanItem<ComprobanteRetencionBinding>(comprobante);		 
 		 FieldGroup fg=new FieldGroup();
 		 fg.setItemDataSource(bi);
 		 fg.bind(identificacionBeneficiario,"identificacionBeneficiario");
@@ -234,31 +240,15 @@ private CampoNumeroIdentificacion identificacionBeneficiario;
 							comprobante.getInfoTributaria().setPuntoEmision(userInfo.getPuntoEmision());
 							comprobante.getInfoTributaria().setNombreComercial(userInfo.getNombreComercial());
 							comprobante.getInfoTributaria().setRazonSocialEmisor(userInfo.getRazonSocialEmisor());
-							comprobante.getInfoTributaria().setDireccionMatriz(userInfo.getDireccionMatriz());
-						
+							comprobante.getInfoTributaria().setDireccionMatriz(userInfo.getDireccionMatriz());						
 							comprobante.setPeriodoFiscal(fechaComprobante.getValue());
-							
-							
-							
-							
-							
-							
-							
-							
-							
-//							comprobante.set
-//													
-//							
-//							
-//							comprobanteEnXML.getInfoTributaria().setRuc(userInfo.getRucEmisor());
-//							
-//					
-//							
-//							String conmprobanteHechoString=conversorComprobanteEnString.conversorEnStringCR(comprobanteEnXML);							
-//							ReceptorComprobantesWsService servicess=new ReceptorComprobantesWsService();
-//							ReceptorComprobantesWs receptorComprobantesWsPort = servicess.getReceptorComprobantesWsPort();
-//							String recibirComprobante = receptorComprobantesWsPort.recibirComprobante(userInfo.getRucEmisor(), identificacionBeneficiario.getValue(), conmprobanteHechoString.getBytes(), claveAccesoGuiaRemision);
-//							Logger.getLogger(ComprobanteRetencion.class.getCanonicalName()).info("el resultado fue "+recibirComprobante);
+							String claveAcceso=receptorComprobanteRetencionNeutra.receptarComprobanteRetencion(comprobante);
+							StringBuilder sbnumerodocumento=new StringBuilder();
+							sbnumerodocumento.append(utilClaveAcceso.obtenerCodigoEstablecimiento(claveAcceso));
+							sbnumerodocumento.append("-");
+							sbnumerodocumento.append(utilClaveAcceso.obtenerCodigoPuntoEmision(claveAcceso));
+							sbnumerodocumento.append("-").append(utilClaveAcceso.obtenerSecuanciaDocumento(claveAcceso));
+							Notification.show("Resultado", "Documento "+sbnumerodocumento.toString()+"  clave de acceso "+claveAcceso,Notification.TYPE_HUMANIZED_MESSAGE);
 						}
 						
 					}

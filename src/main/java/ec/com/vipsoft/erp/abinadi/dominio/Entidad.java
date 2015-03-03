@@ -66,8 +66,27 @@ public class Entidad implements Serializable, Comparable<Entidad> {
     protected Long secuenciaTransaccion;
     private Boolean usaComprobantesElectronicos;
     private  Boolean habilitado;
+    @Column(columnDefinition="varchar(30) unique")
+    private String dominioInternet;
+    private String usuarioAdministrador;
     
-    public String getNombreReporteFactura() {
+    public String getUsuarioAdministrador() {
+		return usuarioAdministrador;
+	}
+
+	public void setUsuarioAdministrador(String usuarioAdministrador) {
+		this.usuarioAdministrador = usuarioAdministrador;
+	}
+
+	public String getDominioInternet() {
+		return dominioInternet;
+	}
+
+	public void setDominioInternet(String dominioInternet) {
+		this.dominioInternet = dominioInternet;
+	}
+
+	public String getNombreReporteFactura() {
 		return nombreReporteFactura;
 	}
 
