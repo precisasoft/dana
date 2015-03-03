@@ -63,12 +63,18 @@ public class ReceptorFacturaNeutra {
 	@WebMethod
 	@WebResult(name = "claveAcceso")
 	public String recibirFactura(@WebParam(name = "factura") FacturaBinding factura) {
+		/**
+		 * autocompletar para usuario final cuando no se determine quien es
+		 */
 		if((factura.getIdentificacionBeneficiario()==null)||(factura.getIdentificacionBeneficiario().length()<=1)){
 			if(factura.getTotal().doubleValue()<=20d){
-				factura.setIdentificacionBeneficiario("9999999999999");
-				factura.setRazonSocialBeneficiario("USUARIO FINAL");
-				factura.setDireccionBeneficiario("USUARIO FINAL");
+				factura.setIdentificacionBeneficiario("9999999999999");				
 			}
+		}
+		if((factura.getIdentificacionBeneficiario().equalsIgnoreCase("9999999999"))||(factura.getIdentificacionBeneficiario().equalsIgnoreCase("9999999999999"))||(factura.getIdentificacionBeneficiario().equalsIgnoreCase("99999999999"))||(factura.getIdentificacionBeneficiario().equalsIgnoreCase("999999999999"))){
+			factura.setRazonSocialBeneficiario("USUARIO FINAL");
+			factura.setDireccionBeneficiario("USUARIO FINAL");
+			factura.setIdentificacionBeneficiario("9999999999999");
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
