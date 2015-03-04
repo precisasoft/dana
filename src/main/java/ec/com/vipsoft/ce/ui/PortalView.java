@@ -6,6 +6,7 @@ import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -48,8 +49,10 @@ public class PortalView extends VerticalLayout implements View{
 		comboTipoDocumento=new ComboTipoDocumento();
 		Label labelEspacio=new Label("  ");
 		labelEspacio.setWidth("100px");
-		botonSalir.addClickListener(event -> {SecurityUtils.getSubject().logout();
+		botonSalir.addClickListener(event -> {
+			//SecurityUtils.getSubject().logout();
 			UI.getCurrent().getNavigator().navigateTo("login");
+			VaadinSession.getCurrent().getSession().invalidate();
 		});
 		OptionGroup criterioBusqueda=new OptionGroup();
 		criterioBusqueda.addItem("porClave");

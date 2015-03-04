@@ -1,5 +1,7 @@
 package ec.com.vipsoft.ce.ui;
 
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -27,6 +29,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
+import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
+import ec.com.vipsoft.erp.abinadi.procesos.UsarContingencia;
 
 @CDIView("login")
 public class LoginView extends VerticalLayout implements View {
@@ -84,6 +88,18 @@ public class LoginView extends VerticalLayout implements View {
 				Subject currentUser=SecurityUtils.getSubject();
 				try{
 					currentUser.login(uptoken);
+					Map<String, String> mapa = registradorUsuario.llenarUserInfo(usuario.getValue());
+					if(mapa.size()>0){
+						userInfo.setRucEmisor(mapa.get("rucEmisor"));
+						userInfo.setCodigoEstablecimiento(mapa.get("codigoEstablecimiento"));
+					//	userInfo.setIdEstablecimiento(Integer.valueOf(mapa.get("idEstablecimiento")));
+						userInfo.setPuntoEmision(mapa.get("puntoEmision"));
+						userInfo.setRazonSocialEmisor(mapa.get("razonSocialEmisor"));
+					//	userInfo.setIdPuntoEmision(Integer.valueOf(mapa.get("idPuntoEmision")));	
+					}
+					
+					
+					
 					if(currentUser.hasRole("operador")){
 						//amarrar el login con las variables de usuario
 						

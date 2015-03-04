@@ -23,6 +23,7 @@ public class Entidad implements Serializable, Comparable<Entidad> {
 
     private static final long serialVersionUID = 1L;
 
+    
     private Boolean ambienteProduccion;
     private byte[] archivop12;
     private boolean comprobanteRetencionEnPruebas;
@@ -129,6 +130,7 @@ public class Entidad implements Serializable, Comparable<Entidad> {
 	public Entidad() {
         secuenciaTransaccion = 1L;
         inicializarSecuenciasCA();
+        habilitado=true;
     }
 
     public boolean isHabilitado() {

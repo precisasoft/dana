@@ -60,30 +60,55 @@ public class RegistradorUsuario {
 				qporDominio.setParameter(1, dominio);
 				List<Entidad>listadoEntidad=qporDominio.getResultList();
 				if(!listadoEntidad.isEmpty()){
-					Entidad entidac=em.find(Entidad.class,listadoEntidad.get(0).getId());
-					if((entidac.getUsuarioAdministrador()==null)||(entidac.getUsuarioAdministrador().length()<2)){
-						UserRolePK rolAdministrador=new UserRolePK();
-						rolAdministrador.setRoleName("administrador");
-						rolAdministrador.setUsername(userName);
-						UserRole rol2=new UserRole();
-						rol2.setId(rolAdministrador);
-						em.persist(rol2);
-						UserRolePK rolOperador=new UserRolePK();
-						rolOperador.setRoleName("operador");
-						rolOperador.setUsername(userName);
-						UserRole rol3=new UserRole();
-						rol3.setId(rolOperador);
-						em.persist(rol3);
-						entidac.setUsuarioAdministrador(userName);
+					Entidad entidac=em.find(Entidad.class,listadoEntidad.get(0).getId());		
+					if(entidac.isHabilitado()){
+						if(((entidac.getUsuarioAdministrador()==null)||(entidac.getUsuarioAdministrador().length()<2))){
+							UserRolePK rolAdministrador=new UserRolePK();
+							rolAdministrador.setRoleName("administrador");
+							rolAdministrador.setUsername(userName);
+							UserRole rol2=new UserRole();
+							rol2.setId(rolAdministrador);
+							em.persist(rol2);
+							UserRolePK rolOperador=new UserRolePK();
+							rolOperador.setRoleName("operador");
+							rolOperador.setUsername(userName);
+							UserRole rol3=new UserRole();
+							rol3.setId(rolOperador);
+							em.persist(rol3);
+							entidac.setUsuarioAdministrador(userName);							
+						}else{
+							UserRolePK rolOperador=new UserRolePK();
+							rolOperador.setRoleName("operador");
+							rolOperador.setUsername(userName);
+							UserRole rol3=new UserRole();
+							rol3.setId(rolOperador);
+							em.persist(rol3);
+						}
 						
-					}else{
-						UserRolePK rolOperador=new UserRolePK();
-						rolOperador.setRoleName("operador");
-						rolOperador.setUsername(userName);
-						UserRole rol3=new UserRole();
-						rol3.setId(rolOperador);
-						em.persist(rol3);
+						//empatar para que pueda ser el operador del puntodeventa por defecto.
+						
+						Query qestablecimiento=em.createQuery("select e from Establecimiento e where e.entidad=?1");
+						qestablecimiento.setParameter(1, entidac);
+						List<Establecimiento>listadoEstablecimiento=qestablecimiento.getResultList();
+						boolean encontrado=false;
+						for(Establecimiento establecimiento:listadoEstablecimiento){
+							if(encontrado){
+								break;
+							}
+							for(PuntoVenta pos:establecimiento.getPos()){
+								if(pos.isDefaultPuntoVentaElectronico()){
+									encontrado=true;
+									PuntoVenta _pos=em.find(PuntoVenta.class, pos.getId());
+									if((_pos.getUsuarioPorDefecto()==null)||(_pos.getUsuarioPorDefecto().length()<2)){
+										_pos.setUsuarioPorDefecto(userName);
+									}
+									
+									break;
+								}
+							}
+						}
 					}
+					
 				}				
 			}
 		}
@@ -91,26 +116,37 @@ public class RegistradorUsuario {
 		em.persist(rolUsuario);
 		return retorno;
 	}
-	public Map<String,String> llenarUserInfo(String userName){
-		Map<String,String>mapa=new HashMap<String,String>();
-		Query q=em.createQuery("select p from PuntoVenta p where p.usuarioPorDefecto=?1");
-		q.setParameter(1, userName);
-		List<PuntoVenta>listaPuntoVenta=q.getResultList();
-		if(!listaPuntoVenta.isEmpty()){
-			PuntoVenta pos=em.find(PuntoVenta.class, listaPuntoVenta.get(0).getId());
-			if(pos!=null){
-				Establecimiento establecimiento=pos.getEstablecimiento();
-				mapa.put("idEstablecimiento",String.valueOf(establecimiento.getId()));
-				mapa.put("codigoEstablecimiento", establecimiento.getCodigo());
-				mapa.put("puntoEmision", pos.getCodigoPuntoVenta());
-				mapa.put("idPuntoEmision", String.valueOf(pos.getId()));
-				Entidad e=em.find(Entidad.class, establecimiento.getEntidad().getId());
-				mapa.put("rucEmisor", e.getRuc());
-						
-				
+
+	public Map<String, String> llenarUserInfo(String userName) {
+		Map<String, String> mapa = new HashMap<String, String>();
+		StringTokenizer stringTokenizer = new StringTokenizer(userName, "@");
+		String user = stringTokenizer.nextToken();
+		if (stringTokenizer.hasMoreTokens()) {
+			String dominio = stringTokenizer.nextToken();
+			if (dominio != null) {
+				Query qEntidad = em.createQuery("select e from Entidad e where e.dominioInternet=?1");
+				qEntidad.setParameter(1, dominio);
+				List<Entidad> listadoEntidad = qEntidad.getResultList();
+				if (!listadoEntidad.isEmpty()) {
+					mapa.put("rucEmisor", listadoEntidad.get(0).getRuc());
+					mapa.put("razonSocialEmisor", listadoEntidad.get(0)	.getRazonSocial());
+					Query q = em.createQuery("select p from PuntoVenta p where p.usuarioPorDefecto=?1");
+					q.setParameter(1, userName);
+					List<PuntoVenta> listaPuntoVenta = q.getResultList();
+					if (!listaPuntoVenta.isEmpty()) {
+						PuntoVenta pos = em.find(PuntoVenta.class,listaPuntoVenta.get(0).getId());
+						if (pos != null) {
+							Establecimiento establecimiento = pos.getEstablecimiento();
+							mapa.put("idEstablecimiento",String.valueOf(establecimiento.getId()));
+							mapa.put("codigoEstablecimiento",establecimiento.getCodigo());
+							mapa.put("puntoEmision", pos.getCodigoPuntoVenta());
+							mapa.put("idPuntoEmision",String.valueOf(pos.getId()));
+						}
+					}
+				}
 			}
 		}
 		return mapa;
-		
+
 	}
 }

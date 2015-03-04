@@ -22,7 +22,11 @@ import javax.persistence.ManyToOne;
 public class PuntoVenta implements Serializable {
 
     public PuntoVenta() {
-
+    	secuenciaFacturacion=1L;
+    	secuenciaGuiaRemision=1L;
+    	secuenciaNotaCredito=1L;
+    	secuenciaNotaDebito=1L;
+    	secuenciaRetencion=1L;
     }
     
     private static final long serialVersionUID = 1L;

@@ -6,6 +6,7 @@ import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -44,8 +45,10 @@ public class MenuView extends VerticalLayout implements View{
 		addComponent(botonGuiaRemision);
 		addComponent(botonComprobanteRetencion);
 		botonSalir=new BotonSalir();
-		botonSalir.addClickListener(event -> {SecurityUtils.getSubject().logout();
+		botonSalir.addClickListener(event -> {			
+			//SecurityUtils.getSubject().logout();
 			UI.getCurrent().getNavigator().navigateTo("login");
+			VaadinSession.getCurrent().getSession().invalidate();
 		});
 		addComponent(botonSalir);
 		
