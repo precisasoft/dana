@@ -61,7 +61,7 @@ public class RegistradorUsuario {
 				List<Entidad>listadoEntidad=qporDominio.getResultList();
 				if(!listadoEntidad.isEmpty()){
 					Entidad entidac=em.find(Entidad.class,listadoEntidad.get(0).getId());
-					if(entidac.getUsuarioAdministrador()!=null){
+					if((entidac.getUsuarioAdministrador()==null)||(entidac.getUsuarioAdministrador().length()<2)){
 						UserRolePK rolAdministrador=new UserRolePK();
 						rolAdministrador.setRoleName("administrador");
 						rolAdministrador.setUsername(userName);
