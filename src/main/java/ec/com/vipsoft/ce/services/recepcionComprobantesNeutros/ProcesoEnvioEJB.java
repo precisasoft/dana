@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
+import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
 import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
 import ec.com.vipsoft.erp.abinadi.procesos.RespuestaRecepcionDocumento;
 
@@ -43,6 +44,8 @@ public class ProcesoEnvioEJB {
 			comprobante.setPuntoEMision((String)parametros.get("codigoPuntoVenta"));		
 			comprobante.setEstablecimiento((String)parametros.get("establecimiento"));
 			comprobante.setSecuencia((String) parametros.get("secuenciaDocumento"));
+			comprobante.setIdentificacionBeneficiario((String) parametros.get("idCliente"));
+			comprobante.setTipo((TipoComprobante) parametros.get("tipoComprobante"));
 		
 			comprobante.setAutorizado(false);
 			//boolean enviado = (boolean) proccessInstance.getProcessVariables().get("enviado");

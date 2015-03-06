@@ -52,6 +52,7 @@ import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionDetalleBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.ImpuestoRetencion;
 import ec.com.vipsoft.ce.utils.LlenadorNumeroComprobante;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
+import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.Impuesto;
@@ -245,6 +246,8 @@ public class ReceptorComprobanteRetencionNeutra {
 					parametros.put("secuenciaDocumento", secuenciaDocumento);
 					parametros.put("intentos", 0);
 					parametros.put("maxIntentos", 5);
+					parametros.put("idCliente", comprobanteRetencion.getInfoCompRetencion().getIdentificacionSujetoRetenido());
+					parametros.put("tipoComprobante", TipoComprobante.retencion);
 					procesoEnvio.lanzarProcesoEnvio(parametros);
 					retorno=claveAcceso;
 				} catch (Exception e) {

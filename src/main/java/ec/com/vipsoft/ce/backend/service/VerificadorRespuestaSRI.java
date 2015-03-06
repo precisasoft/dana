@@ -2,6 +2,7 @@ package ec.com.vipsoft.ce.backend.service;
 
 import java.io.StringWriter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Logger;
@@ -18,22 +19,31 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.soap.SOAPException;
 
+import ec.com.vipsoft.ce.services.recepcionComprobantesNeutros.EnviadorSRIEJB;
 import ec.com.vipsoft.ce.sri.autorizacion.wsclient.Autorizacion;
 import ec.com.vipsoft.ce.sri.autorizacion.wsclient.ConsultaAutorizacion;
 import ec.com.vipsoft.ce.sri.autorizacion.wsclient.RespuestaAutorizacionComprobante;
+import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteAutorizado;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
+import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
+import ec.com.vipsoft.erp.abinadi.procesos.RespuestaRecepcionDocumento;
 
 @Stateless
 public class VerificadorRespuestaSRI {
 
+	public static Integer MAXREINTENTOS=50;
 	@PersistenceContext
 	private EntityManager em;
 	@Inject
 	private ConsultaAutorizacion consultorAutorizacion;
+	@EJB
+	private EnviadorSRIEJB enviadorSRI;
+	@Inject
+	private UtilClaveAcceso utilClaveAcceso;
 
 	
-	@Schedule(dayOfMonth="*",hour="*",minute="*",second="0",year="*",month="*")
+	@Schedule(dayOfMonth="*",hour="*",minute="*",second="0,10,20,30,40,50",year="*",month="*")
 	public void verificarAutorizacionesPendientes(){
 		
 		JAXBContext contexto=null;
@@ -62,6 +72,9 @@ public class VerificadorRespuestaSRI {
 				if(!respuesta.getAutorizaciones().isEmpty()){
 					for(Autorizacion a:respuesta.getAutorizaciones()){
 						if(a.getEstado().equalsIgnoreCase("AUTORIZADO")){
+							//aqui construir el pdf ... y xml ... 
+							
+							
 							StringWriter swriter=new StringWriter();
 							marshaller.marshal(respuesta.getAutorizaciones().get(0), swriter);				
 							ComprobanteElectronico elcomprobante=em.find(ComprobanteElectronico.class, c.getId());
@@ -76,7 +89,24 @@ public class VerificadorRespuestaSRI {
 							//notificador.equals(elcomprobante.getIdentificacionBeneficiario().)
 						}
 					}
-				}
+				}else{
+						// si ha pasado media hora ...volver a enviarlo.
+						Query qcomprobantes = em.createQuery("select c from ComprobanteElectronico c where c.claveAccesp=?1");
+						qcomprobantes.setParameter(1,respuesta.getClaveAccesoConsultada());
+						List<ComprobanteElectronico> listaComprobantes = qcomprobantes.getResultList();
+						if (!listaComprobantes.isEmpty()) {
+							Calendar ahora2 = new GregorianCalendar();
+							ahora2.add(Calendar.MINUTE, -30);
+							ComprobanteElectronico lazaro = em.find(ComprobanteElectronico.class,listaComprobantes.get(0).getId());
+							if ((lazaro.getFechaEnvio().before(ahora2.getTime())&&(lazaro.getReintentos()<=MAXREINTENTOS))) {
+								DocumentoFirmado dfirmado = em.find(DocumentoFirmado.class,	lazaro.getDocumentoFirmado());
+								RespuestaRecepcionDocumento enviarComprobanteAlSRI = enviadorSRI.enviarComprobanteAlSRI(dfirmado.getConvertidoEnXML(),utilClaveAcceso.esEnPruebas(lazaro.getClaveAcceso()));
+								lazaro.setFechaEnvio(new Date());
+								lazaro.setReintentos(lazaro.getReintentos()+1);
+							}
+
+						}
+					}
 
 			} catch (SOAPException e) {
 				// TODO Auto-generated catch block

@@ -66,6 +66,7 @@ public class ComprobanteElectronico implements Serializable {
 	@Column(name="ptoemision")
 	private String puntoEMision;
 	private String secuencia;
+	private Integer reintentos;
     @Enumerated(EnumType.ORDINAL)
 	private TipoComprobante tipo;
     public ComprobanteElectronico() {
@@ -244,4 +245,11 @@ public class ComprobanteElectronico implements Serializable {
 	public void setTipo(TipoComprobante tipo) {
 		this.tipo = tipo;
 	}
+	public Integer getReintentos() {
+		return reintentos;
+	}
+	public void setReintentos(Integer reintentos) {
+		this.reintentos = reintentos;
+	}
+	
 }
