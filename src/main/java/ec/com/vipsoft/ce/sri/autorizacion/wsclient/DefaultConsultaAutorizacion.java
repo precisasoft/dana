@@ -3,6 +3,7 @@ package ec.com.vipsoft.ce.sri.autorizacion.wsclient;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 
+import javax.inject.Inject;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,14 +21,27 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
+
 public class DefaultConsultaAutorizacion implements ConsultaAutorizacion{
+	
+	@Inject 
+	private UtilClaveAcceso utilClaveAcceso;
+	
 	public RespuestaAutorizacionComprobante consultarAutorizacion(String clave)	throws SOAPException {
-		QName serviceName = new QName("https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes","AutorizacionComprobantesService");
-
-		QName portName = new QName("https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl",	"AutorizacionComprobantesPort");
-		String endpointAddress = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes";
+		QName serviceName=null;
+		QName portName=null;
+		String endpointAddress=null;
+		if(utilClaveAcceso.esEnPruebas(clave)){
+			serviceName = new QName("https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes","AutorizacionComprobantesService");
+			portName = new QName("https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl",	"AutorizacionComprobantesPort");
+			endpointAddress = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes";
+		}else{
+			serviceName = new QName("https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes","AutorizacionComprobantesService");
+			portName = new QName("https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl",	"AutorizacionComprobantesPort");
+			endpointAddress = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes";	
+		}				
 		Service service = Service.create(serviceName);
-
 		// Add a port to the Service
 		service.addPort(portName, SOAPBinding.SOAP11HTTP_BINDING,endpointAddress);
 		Dispatch<SOAPMessage> dispatch = service.createDispatch(portName,SOAPMessage.class, Service.Mode.MESSAGE);

@@ -1,5 +1,6 @@
 package ec.com.vipsoft.ce.services.recepcionComprobantesNeutros;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.ejb.EJB;
@@ -42,6 +43,7 @@ public class ProcesoEnvioEJB {
 			comprobante.setPuntoEMision((String)parametros.get("codigoPuntoVenta"));		
 			comprobante.setEstablecimiento((String)parametros.get("establecimiento"));
 			comprobante.setSecuencia((String) parametros.get("secuenciaDocumento"));
+		
 			comprobante.setAutorizado(false);
 			//boolean enviado = (boolean) proccessInstance.getProcessVariables().get("enviado");
 //			comprobante.setEnviado(enviado);
@@ -49,7 +51,10 @@ public class ProcesoEnvioEJB {
 			if(respuestaRecepcion.getEstado().equalsIgnoreCase("devuelta")){
 				comprobante.setCodigoError(respuestaRecepcion.getDetalle().get(0).getCodigo());
 				comprobante.setMensajeError(respuestaRecepcion.getDetalle().get(0).getMensaje());
-			}			
+			}else{
+				comprobante.setFechaEnvio(new Date());			
+				comprobante.setEnviado(true);
+			}
 				DocumentoFirmado documentoFi = new DocumentoFirmado();
 				documentoFi.setConvertidoEnXML(documentoFirmado);
 				comprobante.setDocumentoFirmado(documentoFi);

@@ -1,6 +1,8 @@
 package ec.com.vipsoft.ce.backend.service;
 
 import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,14 +33,17 @@ public class VerificadorRespuestaSRI {
 	private ConsultaAutorizacion consultorAutorizacion;
 
 	
-	@Schedule(dayOfMonth="*",hour="*",minute="*",second="0,5,10,15,20,25,30,35,40,45,50,55",year="*",month="*")
+	@Schedule(dayOfMonth="*",hour="*",minute="*",second="0",year="*",month="*")
 	public void verificarAutorizacionesPendientes(){
 		
 		JAXBContext contexto=null;
 		Marshaller marshaller=null;
-		Query q=em.createQuery("select c from ComprobanteElectronico c where c.enviado=?1 and c.autorizado=?2");
+		Query q=em.createQuery("select c from ComprobanteElectronico c where c.enviado=?1 and c.autorizado=?2 and c.fechaEnvio<=?3");		
 		q.setParameter(1, Boolean.TRUE);
 		q.setParameter(2, Boolean.FALSE);
+		Calendar ahora=GregorianCalendar.getInstance();
+		ahora.add(Calendar.SECOND, -3);
+		q.setParameter(3, ahora.getTime());		
 		
 		List<ComprobanteElectronico>lista=q.getResultList();		
 		if(!lista.isEmpty()){
