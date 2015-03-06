@@ -51,9 +51,15 @@ public class BaseComprobanteElectronicoBinding implements Serializable{
 		infoAdicional=new HashMap<>();
 	}
 	public String getCodigoEstablecimiento() {
+		if(codigoEstablecimiento==null){
+			codigoEstablecimiento=infoTributaria.getEstablecimiento();
+		}
 		return codigoEstablecimiento.replace("\r", "").replace("\n", "");
 	}
 	public String getCodigoPuntoVenta() {
+		if(codigoPuntoVenta==null){
+			codigoPuntoVenta=infoTributaria.getPuntoEmision();
+		}
 		return codigoPuntoVenta.replace("\r", "").replace("\n", "");
 	}
 	
@@ -70,6 +76,9 @@ public class BaseComprobanteElectronicoBinding implements Serializable{
 		return razonSocialEmisor.replace("\r", "").replace("\n", "");
 	}
 	public String getRucEmisor() {
+		if(rucEmisor==null){
+			rucEmisor= infoTributaria.getRucEmisor();
+		}
 		return rucEmisor.replace("\r", "").replace("\n", "");
 	}
 	public void setCodigoEstablecimiento(String codigoEstablecimiento) {

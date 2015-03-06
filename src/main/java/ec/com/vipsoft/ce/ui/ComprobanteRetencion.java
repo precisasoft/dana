@@ -31,6 +31,7 @@ import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
 import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.ImpuestoRetencion;
 import ec.com.vipsoft.ce.services.recepcionComprobantesNeutros.ReceptorComprobanteRetencionNeutra;
+import ec.com.vipsoft.ce.utils.LlenadorNumeroComprobante;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonAnadir;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonCancelar;
@@ -63,8 +64,8 @@ public class ComprobanteRetencion extends VerticalLayout implements View {
 	private BigDecimal _baseImponible=new BigDecimal("0.00");	
 	private List<ImpuestoRetencion>detalles;
 	private BeanItem<ComprobanteRetencionBinding>bi;
-	
-	
+	@Inject
+	private LlenadorNumeroComprobante llenadorNumeroDocumento;
 	@Inject 
 	private UserInfo userInfo;
 //	@Inject
@@ -115,10 +116,10 @@ public class ComprobanteRetencion extends VerticalLayout implements View {
 		Label lrazonsocial=new Label("Razón Social");
 		l1.addComponent(lrazonsocial);
 		l1.addComponent(razonSocialBeneficiario);
-		Label ltpodoc=new Label("Tipo");
+		Label ltpodoc=new Label("Doc");
 		l1.addComponent(ltpodoc);
 		l1.addComponent(tipoDocumento);
-		Label lnumdoc=new Label("Doc.");
+		Label lnumdoc=new Label("Num.");
 		l1.addComponent(lnumdoc);
 		l1.addComponent(camponumeroFactura);
 		fechaComprobante.setDescription("determine la fecha de emisión del comprobante a retener");
@@ -218,6 +219,9 @@ public class ComprobanteRetencion extends VerticalLayout implements View {
 		tablaDetalles.setMultiSelect(false);
 		botnAnadirDetalle.addClickListener(event -> {
 			try {
+				
+				camponumeroFactura.setValue(llenadorNumeroDocumento.llenarNumeroDocumento(camponumeroFactura.getValue()));
+		
 				fg.commit();
 				comprobante.anadirNuevoDetalle();
 				biir.removeAllItems();
@@ -232,15 +236,17 @@ public class ComprobanteRetencion extends VerticalLayout implements View {
 		botonRegistrar.addClickListener(event->{
 			{
 				try {
+					camponumeroFactura.setValue(llenadorNumeroDocumento.llenarNumeroDocumento(camponumeroFactura.getValue()));
 					fg.commit();
-					if(((identificacionBeneficiario.getValue()!=null)&&(identificacionBeneficiario.getValue().length()>0))&&(razonSocialBeneficiario.getValue()!=null)&&(razonSocialBeneficiario.getValue().length()>0)){
+					if(((identificacionBeneficiario.getValue()!=null)&&(identificacionBeneficiario.getValue().length()>0))&&(razonSocialBeneficiario.getValue()!=null)&&(razonSocialBeneficiario.getValue().length()>0)){					
 						if(!comprobante.getImpuestos().isEmpty()){							
 							comprobante.getInfoTributaria().setDireccionMatriz(userInfo.getDireccionMatriz());
 							comprobante.getInfoTributaria().setEstablecimiento(userInfo.getCodigoEstablecimiento());
 							comprobante.getInfoTributaria().setPuntoEmision(userInfo.getPuntoEmision());
 							comprobante.getInfoTributaria().setNombreComercial(userInfo.getNombreComercial());
 							comprobante.getInfoTributaria().setRazonSocialEmisor(userInfo.getRazonSocialEmisor());
-							comprobante.getInfoTributaria().setDireccionMatriz(userInfo.getDireccionMatriz());						
+							comprobante.getInfoTributaria().setDireccionMatriz(userInfo.getDireccionMatriz());			
+							comprobante.getInfoTributaria().setRucEmisor(userInfo.getRucEmisor());
 							comprobante.setPeriodoFiscal(fechaComprobante.getValue());
 							String claveAcceso=receptorComprobanteRetencionNeutra.receptarComprobanteRetencion(comprobante);
 							StringBuilder sbnumerodocumento=new StringBuilder();

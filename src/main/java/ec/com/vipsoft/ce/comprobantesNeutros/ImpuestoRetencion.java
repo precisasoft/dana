@@ -3,13 +3,17 @@ package ec.com.vipsoft.ce.comprobantesNeutros;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.constraints.Pattern;
 
+import org.mozilla.jss.tests.SDR;
+
 
 public class ImpuestoRetencion implements Comparable<ImpuestoRetencion>,Serializable{
 
+	protected SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
 	private static final long serialVersionUID = 1101567618332835734L;
 	@Pattern(regexp="[1-2,6]{1,1}")
 	protected String codigo;
@@ -112,6 +116,10 @@ public class ImpuestoRetencion implements Comparable<ImpuestoRetencion>,Serializ
 		
 		}
 		return retorno;
+	}
+	public String getFechaEmisionDocumentoSustentoTexTo() {
+		// TODO Auto-generated method stub
+		return sdf.format(fechaEmisionDocumentoSustento);
 	}
 	
 	

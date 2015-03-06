@@ -17,43 +17,45 @@ public class DefaultUtilClaveAcceso implements UtilClaveAcceso {
 
 	@Override
 	public String obtenerCodigoEstablecimiento(String claveAcceso) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return claveAcceso.substring(24,27);
 	}
 
 	@Override
 	public String obtenerCodigoPuntoEmision(String claveAcceso) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return claveAcceso.substring(27,30);
 	}
 
 	@Override
 	public String obtemerRucEmisor(String claveAcceso) {
 		// TODO Auto-generated method stub
-		return null;
+		return claveAcceso.substring(10,23);
 	}
 
 	@Override
 	public boolean esEnContingencia(String claveAcceso) {
-		// TODO Auto-generated method stub
-		return false;
+		if(claveAcceso.substring(47,48).equalsIgnoreCase("1")){
+			return false;
+		}else{
+			return true;	
+		}
+		
 	}
 
 	@Override
 	public String obtenerSecuanciaDocumento(String claveACceso) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return claveACceso.substring(30,39);
 	}
 
 	@Override
-	public String obtenerAmbiente(String claveAcceso) {
-		// TODO Auto-generated method stub
-		return null;
+	public String obtenerAmbiente(String claveAcceso) {		
+		return claveAcceso.substring(23, 24);
 	}
 
 	@Override
 	public String obtenerTipoDocumento(String claveAcceso) {
-		// TODO Auto-generated method stub
-		return null;
+		return claveAcceso.substring(8,10);
 	}
 }

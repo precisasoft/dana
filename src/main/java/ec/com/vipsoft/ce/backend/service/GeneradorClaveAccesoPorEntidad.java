@@ -74,7 +74,10 @@ public class GeneradorClaveAccesoPorEntidad {
                 for (PuntoVenta ptoe : _Establecimiento.getPos()) {
                     if (ptoe.getCodigoPuntoVenta().equalsIgnoreCase(codigoPuntoVenta)) {
                         PuntoVenta elpuntoDeVenta = em.find(PuntoVenta.class, ptoe.getId());
-                        claveAcceso = generadorReal.generarClaveAccesoComprobanteRetencion(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), entidad.isComprobanteRetencionEnPruebas(), elpuntoDeVenta.siguienteSecuenciaRetencion(), entidad.siguienteCARetencion());
+                        boolean enPruebas=entidad.isComprobanteRetencionEnPruebas();
+                        long siguienteSecuenciaRetencion = elpuntoDeVenta.siguienteSecuenciaRetencion();
+                        Integer  siguienteCARetencion  = entidad.siguienteCARetencion();
+                        claveAcceso = generadorReal.generarClaveAccesoComprobanteRetencion(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), enPruebas,siguienteSecuenciaRetencion ,siguienteCARetencion);
                         break;
                     }
                 }
@@ -103,7 +106,7 @@ public class GeneradorClaveAccesoPorEntidad {
                 Establecimiento _Establecimiento = em.find(Establecimiento.class, listaEstablecimiento.get(0).getId());
                 for (PuntoVenta ptoe : _Establecimiento.getPos()) {
                     if (ptoe.getCodigoPuntoVenta().equalsIgnoreCase(codigoPuntoVenta)) {
-                        PuntoVenta elpuntoDeVenta = em.find(PuntoVenta.class, ptoe.getId());
+                        PuntoVenta elpuntoDeVenta = em.find(PuntoVenta.class, ptoe.getId());                        
                         claveAcceso = generadorReal.generarClaveAccesoFactura(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), entidad.isGuiaRemisionEnPruebas(), elpuntoDeVenta.siguienteSecuenciaGuiaRemision(), entidad.siguienteCAGuiaRemision());
                         break;
                     }

@@ -8,11 +8,11 @@ public class AumentoContador implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution arg0) throws Exception {
 		// TODO Auto-generated method stub
-		int intentos=Integer.valueOf((String)arg0.getVariable("intentos"));
+		Integer intentos=(Integer)arg0.getVariable("intentos");
 		intentos++;
 		arg0.removeVariable("intentos");
 		arg0.setVariable("intentos", intentos);
-		int maxIntentos=Integer.valueOf((String)arg0.getVariable("maxIntentos"));
+		Integer maxIntentos=(Integer)arg0.getVariable("maxIntentos");
 		if(intentos>=maxIntentos){
 			arg0.setVariable("rendido", true);
 		}else{

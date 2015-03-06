@@ -46,9 +46,13 @@ public class MyContextListener extends org.apache.shiro.web.env.EnvironmentLoade
          LOG.info("Number of process definitions :"+repositoryService.createProcessDefinitionQuery().count());
          LOG.info("<------------------------  PROCESOS DESPLEGADOS ---------------------->");
          List<ProcessDefinition> lista = repositoryService.createProcessDefinitionQuery().list();
+         if(lista.isEmpty()){
+        	 repositoryService.createDeployment().addClasspathResource("procesoEnvio.bpmn").deploy();
+         }
  		for(ProcessDefinition d:lista){
  				LOG.info("deployment id "+d.getDeploymentId()+"   key  "+d.getKey());				
  		}
+ 		
  		LOG.info("<------------------------  FIN DE LISTA DE PROCESOS DESPLEGADOS ---------------------->");
     }
 	

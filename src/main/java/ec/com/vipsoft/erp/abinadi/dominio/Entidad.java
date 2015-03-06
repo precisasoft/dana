@@ -249,9 +249,16 @@ public class Entidad implements Serializable, Comparable<Entidad> {
         secuenciacanotadebito = new Integer(1);
         secuenciacaretencion = new Integer(1);
         secuenciaTransaccion = new Long(1);
+        comprobanteRetencionEnPruebas=true;
+        facturaEnPruebas=true;
+        notaCreditoEnPruebas=true;
+        notaDebitoEnPruebas=true;
+        guiaRemisionEnPruebas=true;
+        comprobanteRetencionEnPruebas=true;
     }
 
     public boolean isComprobanteRetencionEnPruebas() {
+    	
         return comprobanteRetencionEnPruebas;
     }
 

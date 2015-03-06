@@ -10,7 +10,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 public class ComprobanteRetencionBinding extends BaseComprobanteElectronicoBinding {
-	
+
+	private static final long serialVersionUID = 142973095115731544L;
 	@Valid
 	private SortedSet<ComprobanteRetencionDetalleBinding>detalles;
 	@Pattern(regexp="[0-9]{2}/[0-9]{4}")
@@ -54,7 +55,7 @@ public class ComprobanteRetencionBinding extends BaseComprobanteElectronicoBindi
 		if ((baseImponible.doubleValue() > 0)	&& (porcentajeRetencion.doubleValue() > 0)) {
 			ImpuestoRetencion nimpuesto = new ImpuestoRetencion();
 			nimpuesto.setBaseImponible(baseImponible);
-			nimpuesto.setCodigo(codigoImpuesto);
+			nimpuesto.setCodigo(tipoImpuesto);
 			nimpuesto.setNumeroDocumento(numeroDocumento);
 			nimpuesto.setCodigoRetention(codigoImpuesto);
 			nimpuesto.setFechaEmisionDocumentoSustento(fechaEmision);

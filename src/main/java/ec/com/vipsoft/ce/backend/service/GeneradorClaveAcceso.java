@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.ejb.Stateless;
+@Stateless
 public class GeneradorClaveAcceso implements Serializable {
 
     private static final long serialVersionUID = -1L;

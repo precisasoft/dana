@@ -223,6 +223,10 @@ public class ReceptorFacturaNeutra {
 				parametros.put("rucEmisor", rucEmisor);
 				parametros.put("establecimiento",factura.getCodigoEstablecimiento());
 				parametros.put("codigoPuntoVenta",factura.getCodigoPuntoVenta());
+				parametros.put("archivop12", entidad.getArchivop12());
+				parametros.put("contrasena",entidad.getPasswordp12());
+				parametros.put("documentoAFirmar", convertidoEnDOM);
+				parametros.put("enPruebas", utilClaveAccesl.esEnPruebas(claveAcceso));
 				ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 				RuntimeService runtimeService = processEngine.getRuntimeService();
 				ProcessInstance proccessInstance = runtimeService.startProcessInstanceByKey("procesoEnvio", parametros);
