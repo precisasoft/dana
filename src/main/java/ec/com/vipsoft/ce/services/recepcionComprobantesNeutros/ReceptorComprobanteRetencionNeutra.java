@@ -173,6 +173,7 @@ public class ReceptorComprobanteRetencionNeutra {
 				comprobanteRetencion.getInfoTributaria().setSecuencial(secuenciaDocumento);
 				if (utilClaveAccesl.esEnContingencia(claveAcceso)) {
 					comprobanteRetencion.getInfoTributaria().setTipoEmision("2");
+				//	comprobanteRetencion.getInfoTributaria().set
 				} else {
 					comprobanteRetencion.getInfoTributaria().setTipoEmision("1");
 				}

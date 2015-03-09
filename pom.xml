@@ -293,7 +293,7 @@
             <!-- - ..........................................................................        -->
             
             
-    <!-- to test with TomEE and Arquillian
+    
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>arquillian-tomee-remote</artifactId>
@@ -312,7 +312,7 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-    -->
+   
 
     <!-- to test with OpenEJB embedded and Arquillian
     <dependency>

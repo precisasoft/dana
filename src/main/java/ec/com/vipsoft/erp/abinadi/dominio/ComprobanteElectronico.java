@@ -69,9 +69,19 @@ public class ComprobanteElectronico implements Serializable {
 	private Integer reintentos;
     @Enumerated(EnumType.ORDINAL)
 	private TipoComprobante tipo;
-    public ComprobanteElectronico() {
+    
+    private boolean autorizacionConsultadoAlSRI;
+    
+    public boolean isAutorizacionConsultadoAlSRI() {
+		return autorizacionConsultadoAlSRI;
+	}
+	public void setAutorizacionConsultadoAlSRI(boolean autorizacionConsultadoAlSRI) {
+		this.autorizacionConsultadoAlSRI = autorizacionConsultadoAlSRI;
+	}
+	public ComprobanteElectronico() {
 			super();
-
+			autorizacionConsultadoAlSRI=false;
+			autorizado=false;
 		}
 	public String getClaveAcceso() {
 		return claveAcceso;
