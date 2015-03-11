@@ -3,14 +3,21 @@ package ec.com.vipsoft.ce.listener;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.ProcessDefinition;
+
+import ec.com.vipsoft.ce.backend.service.ContenedorReportesRide;
 
 /**
  * Application Lifecycle Listener implementation class MyContextListener
@@ -28,6 +35,8 @@ public class MyContextListener extends org.apache.shiro.web.env.EnvironmentLoade
     	super();
     }
 
+    @EJB
+    private ContenedorReportesRide contenedorRide;
 	/**
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
@@ -54,6 +63,17 @@ public class MyContextListener extends org.apache.shiro.web.env.EnvironmentLoade
  		}
  		
  		LOG.info("<------------------------  FIN DE LISTA DE PROCESOS DESPLEGADOS ---------------------->");
+ 		
+ 		JasperReport jasperFactura;
+		try {
+			jasperFactura = (JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_factura_1_1_0.jasper"));
+			contenedorRide.setRideFactura(jasperFactura);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+// 		
+ 		
     }
 	
 }
