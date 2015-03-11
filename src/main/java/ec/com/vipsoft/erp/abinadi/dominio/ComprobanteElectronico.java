@@ -26,7 +26,32 @@ import javax.persistence.TemporalType;
 public class ComprobanteElectronico implements Serializable {
 
 	public enum TipoComprobante {
-		factura, guiaRemision, notaCredito, notaDebito, retencion;
+		factura{
+			@Override
+			public String toString(){
+				return "01";
+			}
+		}, guiaRemision{
+			@Override
+			public String toString(){
+				return "06";
+			}
+		}, notaCredito{
+			@Override
+			public String toString(){
+				return "04";
+			}
+		}, notaDebito{
+			@Override
+			public String toString(){
+				return "05";
+			}
+		}, retencion{
+			@Override
+			public String toString(){
+				return "07";
+			}
+		};
 	}
 
 	private static final long serialVersionUID = -7861134113150414156L;

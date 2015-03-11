@@ -1,9 +1,15 @@
 package ec.com.vipsoft.ce.utils;
 
+import java.io.Serializable;
 import java.util.StringTokenizer;
 
 public class DefaultLLenadorNumeroComprobante implements
-		LlenadorNumeroComprobante {
+		LlenadorNumeroComprobante ,Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8871513164473856760L;
 
 	/*
 	 * (non-Javadoc)

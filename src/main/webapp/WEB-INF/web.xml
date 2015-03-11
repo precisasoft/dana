@@ -13,7 +13,4 @@
     <dispatcher>INCLUDE</dispatcher>
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
- <!--  <listener>
-    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
-  </listener> -->
 </web-app>
