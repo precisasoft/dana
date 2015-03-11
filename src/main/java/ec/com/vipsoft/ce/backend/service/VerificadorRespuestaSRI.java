@@ -1,8 +1,6 @@
 package ec.com.vipsoft.ce.backend.service;
 
-import java.io.StringWriter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,19 +13,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.soap.SOAPException;
 
 import ec.com.vipsoft.ce.services.recepcionComprobantesNeutros.EnviadorSRIEJB;
-import ec.com.vipsoft.ce.sri.autorizacion.wsclient.Autorizacion;
 import ec.com.vipsoft.ce.sri.autorizacion.wsclient.ConsultaAutorizacion;
-import ec.com.vipsoft.ce.sri.autorizacion.wsclient.RespuestaAutorizacionComprobante;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
-import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteAutorizado;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
-import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
-import ec.com.vipsoft.erp.abinadi.procesos.RespuestaRecepcionDocumento;
 
 @Stateless
 public class VerificadorRespuestaSRI {
@@ -43,9 +34,11 @@ public class VerificadorRespuestaSRI {
 	private UtilClaveAcceso utilClaveAcceso;
 	@EJB
 	private VerificadorIndisponibilidad verificadorIndisponibilidad;
+	@EJB
+	private VerificadorRespuestaIndividual verificadorRespuestaIndividual;
 
 	
-	//@Schedule(dayOfMonth="*",hour="*",minute="*/2",second="0",year="*",month="*")
+	@Schedule(dayOfMonth="*",hour="*",minute="*",second="0,10,20,30,40,50",year="*",month="*")
 	public void verificarAutorizacionesPendientes(){
 		if(!verificadorIndisponibilidad.estamosEnContingencia()){
 			JAXBContext contexto=null;
@@ -59,7 +52,11 @@ public class VerificadorRespuestaSRI {
 
 			List<ComprobanteElectronico>lista=q.getResultList();		
 			if(!lista.isEmpty()){
-				Logger.getLogger(VerificadorRespuestaSRI.class.getCanonicalName()).finer("vamos a verficar respuesta de "+lista.size()+" comprobantes recibidos pero no autorizados");
+				for(ComprobanteElectronico c:lista){
+					String autorizacion=verificadorRespuestaIndividual.verificarAutorizacionComprobante(c.getClaveAcceso());
+					
+				}
+				
 				
 			}	
 		}

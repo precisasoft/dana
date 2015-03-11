@@ -22,6 +22,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -86,7 +87,10 @@ public class ComprobanteRetencion extends VerticalLayout implements View {
 	}
 	@Override
 	public void enter(ViewChangeEvent event) {
-	
+		if(userInfo.getCodigoEstablecimiento()==null){
+			Notification.show("ERROR", "Ud no tiene asignado un establecimiento y/o punto de emisión", Type.ERROR_MESSAGE);
+			botonRegistrar.setEnabled(false);
+		}
 
 	}
 
