@@ -24,96 +24,109 @@ public class RegistradorUsuario {
 	
 	@PersistenceContext
 	private EntityManager em;
-	public boolean registrarUsuario(String userName,String password,String nombres,String apellidos){
+	public boolean registrarUsuario(String userName,String password,String razonsocial){
+		
 		boolean retorno=false;
-		User usuario=new User();
-		usuario.setUsername(userName);
-		DefaultPasswordService dpasswordService=new DefaultPasswordService();
-		usuario.setPassword(dpasswordService.encryptPassword(password));
-		usuario.setNombre(nombres);
-		usuario.setApellidos(apellidos);
-		usuario.setActivo(false);
+		//primero verificamos que no exista ......
 		
-		UserRolePK useRole=new UserRolePK();
-		useRole.setUsername(userName);
-		useRole.setRoleName("usuario");
-		UserRole rolUsuario=new UserRole();
-		rolUsuario.setId(useRole);
-		
-		Query q=em.createQuery("select r from RolesPermission r ");
-		List<RolesPermission>lista=q.getResultList();
-		if(lista.isEmpty()){
-			RolesPermissionPK rolPermision=new RolesPermissionPK();
-			rolPermision.setRoleName("usuario");
-			rolPermision.setRoleper("portal");
-			RolesPermission rolpermision=new RolesPermission();
-			rolpermision.setId(rolPermision);
-			em.persist(rolpermision);
-		}
-		//verificar si exisite usuario en empresa ..
-		StringTokenizer stringTokenizer=new StringTokenizer(userName,"@");
-		String user=stringTokenizer.nextToken();
-		if(stringTokenizer.hasMoreTokens()){
-			String dominio=stringTokenizer.nextToken();
-			if(dominio!=null){
-				Query qporDominio=em.createQuery("select e from Entidad e where e.dominioInternet=?1");
-				qporDominio.setParameter(1, dominio);
-				List<Entidad>listadoEntidad=qporDominio.getResultList();
-				if(!listadoEntidad.isEmpty()){
-					Entidad entidac=em.find(Entidad.class,listadoEntidad.get(0).getId());		
-					if(entidac.isHabilitado()){
-						if(((entidac.getUsuarioAdministrador()==null)||(entidac.getUsuarioAdministrador().length()<2))){
-							UserRolePK rolAdministrador=new UserRolePK();
-							rolAdministrador.setRoleName("administrador");
-							rolAdministrador.setUsername(userName);
-							UserRole rol2=new UserRole();
-							rol2.setId(rolAdministrador);
-							em.persist(rol2);
-							UserRolePK rolOperador=new UserRolePK();
-							rolOperador.setRoleName("operador");
-							rolOperador.setUsername(userName);
-							UserRole rol3=new UserRole();
-							rol3.setId(rolOperador);
-							em.persist(rol3);
-							entidac.setUsuarioAdministrador(userName);							
-						}else{
-							UserRolePK rolOperador=new UserRolePK();
-							rolOperador.setRoleName("operador");
-							rolOperador.setUsername(userName);
-							UserRole rol3=new UserRole();
-							rol3.setId(rolOperador);
-							em.persist(rol3);
-						}
-						
-						//empatar para que pueda ser el operador del puntodeventa por defecto.
-						
-						Query qestablecimiento=em.createQuery("select e from Establecimiento e where e.entidad=?1");
-						qestablecimiento.setParameter(1, entidac);
-						List<Establecimiento>listadoEstablecimiento=qestablecimiento.getResultList();
-						boolean encontrado=false;
-						for(Establecimiento establecimiento:listadoEstablecimiento){
-							if(encontrado){
-								break;
+		Query qexiste=em.createQuery("select u from User u where u.username=?1");
+		qexiste.setParameter(1, userName);
+		List<User>listaUsuario=qexiste.getResultList();
+		if(listaUsuario.isEmpty()){
+			//no existe
+			
+			User usuario=new User();
+			usuario.setUsername(userName);
+			DefaultPasswordService dpasswordService=new DefaultPasswordService();
+			usuario.setPassword(dpasswordService.encryptPassword(password));
+			usuario.setRazonSocial(razonsocial);
+			usuario.setActivo(false);
+			
+			UserRolePK useRole=new UserRolePK();
+			useRole.setUsername(userName);
+			useRole.setRoleName("usuario");
+			UserRole rolUsuario=new UserRole();
+			rolUsuario.setId(useRole);
+			
+			Query q=em.createQuery("select r from RolesPermission r ");
+			List<RolesPermission>lista=q.getResultList();
+			if(lista.isEmpty()){
+				RolesPermissionPK rolPermision=new RolesPermissionPK();
+				rolPermision.setRoleName("usuario");
+				rolPermision.setRoleper("portal");
+				RolesPermission rolpermision=new RolesPermission();
+				rolpermision.setId(rolPermision);
+				em.persist(rolpermision);
+			}
+			//verificar si exisite usuario en empresa ..
+			StringTokenizer stringTokenizer=new StringTokenizer(userName,"@");
+			String user=stringTokenizer.nextToken();
+			if(stringTokenizer.hasMoreTokens()){
+				String dominio=stringTokenizer.nextToken();
+				if(dominio!=null){
+					Query qporDominio=em.createQuery("select e from Entidad e where e.dominioInternet=?1");
+					qporDominio.setParameter(1, dominio);
+					List<Entidad>listadoEntidad=qporDominio.getResultList();
+					if(!listadoEntidad.isEmpty()){
+						Entidad entidac=em.find(Entidad.class,listadoEntidad.get(0).getId());		
+						if(entidac.isHabilitado()){
+							if(((entidac.getUsuarioAdministrador()==null)||(entidac.getUsuarioAdministrador().length()<2))){
+								UserRolePK rolAdministrador=new UserRolePK();
+								rolAdministrador.setRoleName("administrador");
+								rolAdministrador.setUsername(userName);
+								UserRole rol2=new UserRole();
+								rol2.setId(rolAdministrador);
+								em.persist(rol2);
+								UserRolePK rolOperador=new UserRolePK();
+								rolOperador.setRoleName("operador");
+								rolOperador.setUsername(userName);
+								UserRole rol3=new UserRole();
+								rol3.setId(rolOperador);
+								em.persist(rol3);
+								entidac.setUsuarioAdministrador(userName);							
+							}else{
+								UserRolePK rolOperador=new UserRolePK();
+								rolOperador.setRoleName("operador");
+								rolOperador.setUsername(userName);
+								UserRole rol3=new UserRole();
+								rol3.setId(rolOperador);
+								em.persist(rol3);
 							}
-							for(PuntoVenta pos:establecimiento.getPos()){
-								if(pos.isDefaultPuntoVentaElectronico()){
-									encontrado=true;
-									PuntoVenta _pos=em.find(PuntoVenta.class, pos.getId());
-									if((_pos.getUsuarioPorDefecto()==null)||(_pos.getUsuarioPorDefecto().length()<2)){
-										_pos.setUsuarioPorDefecto(userName);
-									}
-									
+							
+							//empatar para que pueda ser el operador del puntodeventa por defecto.
+							
+							Query qestablecimiento=em.createQuery("select e from Establecimiento e where e.entidad=?1");
+							qestablecimiento.setParameter(1, entidac);
+							List<Establecimiento>listadoEstablecimiento=qestablecimiento.getResultList();
+							boolean encontrado=false;
+							for(Establecimiento establecimiento:listadoEstablecimiento){
+								if(encontrado){
 									break;
+								}
+								for(PuntoVenta pos:establecimiento.getPos()){
+									if(pos.isDefaultPuntoVentaElectronico()){
+										encontrado=true;
+										PuntoVenta _pos=em.find(PuntoVenta.class, pos.getId());
+										if((_pos.getUsuarioPorDefecto()==null)||(_pos.getUsuarioPorDefecto().length()<2)){
+											_pos.setUsuarioPorDefecto(userName);
+										}
+										
+										break;
+									}
 								}
 							}
 						}
-					}
-					
-				}				
+						
+					}				
+				}
 			}
+			em.persist(usuario);
+			em.persist(rolUsuario);		
 		}
-		em.persist(usuario);
-		em.persist(rolUsuario);
+		
+		
+		
+	
 		return retorno;
 	}
 

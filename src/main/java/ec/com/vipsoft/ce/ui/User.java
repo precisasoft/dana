@@ -19,9 +19,9 @@ public class User implements Serializable {
 
 	private Boolean activo;
 
-	private String apellidos;
+	private String razonSocial;
 
-	private String nombre;
+	
 
 	private String password;
 
@@ -55,20 +55,14 @@ public class User implements Serializable {
 		this.activo = activo;
 	}
 
-	public String getApellidos() {
-		return this.apellidos;
+
+
+	public String getRazonSocial() {
+		return razonSocial;
 	}
 
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
-
-	public String getNombre() {
-		return this.nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setRazonSocial(String razonSocial) {
+		this.razonSocial = razonSocial;
 	}
 
 	public String getPassword() {

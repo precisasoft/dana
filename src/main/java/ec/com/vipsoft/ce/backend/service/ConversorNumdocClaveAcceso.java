@@ -19,6 +19,10 @@ import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante
 @WebService
 public class ConversorNumdocClaveAcceso implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8539455864752924622L;
 	@PersistenceContext
 	private EntityManager em;
 	@Inject
@@ -29,26 +33,26 @@ public class ConversorNumdocClaveAcceso implements Serializable {
 	 * @param numeroDocumento
 	 * @return clave de acceso
 	 */
-	public String obtenerClaveAcceso(String tipo,String numeroDocumento){
-		StringBuilder sb=new StringBuilder();
+	public String obtenerClaveAcceso(String rucEmisor,String tipo,String numeroDocumento){
+		StringBuilder sb=new StringBuilder();		
 		String numd=llenadorNumeroComprobante.llenarNumeroDocumento(numeroDocumento);
 		StringTokenizer st=new StringTokenizer(numd,"-");
 		TipoComprobante tipoc=null;
 		Query q=em.createQuery("select c from ComprobanteElectronico c where c.tipo=?1 and c.establecimiento=?2 and c.puntoEMision=?3 and c.secuencia=?4" );
 		if((tipo.equalsIgnoreCase("01"))||(tipo.equalsIgnoreCase("FA"))){
-			tipoc=tipoc.factura;
+			tipoc=TipoComprobante.factura;
 		}
 		if(tipo.equalsIgnoreCase("04")||(tipo.equalsIgnoreCase("NC"))){
-			tipoc=tipoc.notaCredito;
+			tipoc=TipoComprobante.notaCredito;
 		}
 		if(tipo.equalsIgnoreCase("05")||(tipo.equalsIgnoreCase("ND"))){
-			tipoc=tipoc.notaDebito;
+			tipoc=TipoComprobante.notaDebito;
 		}
 		if(tipo.equalsIgnoreCase("06")||(tipo.equalsIgnoreCase("GR"))){
-			tipoc=tipoc.guiaRemision;
+			tipoc=TipoComprobante.guiaRemision;
 		}
 		if(tipo.equalsIgnoreCase("07")||(tipo.equalsIgnoreCase("RE"))){
-			tipoc=tipoc.retencion;
+			tipoc=TipoComprobante.retencion;
 		}
 		q.setParameter(1, tipoc);
 		q.setParameter(2, st.nextToken());

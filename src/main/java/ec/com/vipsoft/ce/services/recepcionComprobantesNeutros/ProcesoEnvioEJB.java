@@ -2,6 +2,7 @@ package ec.com.vipsoft.ce.services.recepcionComprobantesNeutros;
 
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
@@ -9,17 +10,20 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import ec.com.vipsoft.ce.backend.service.AdministradorAutorizacionContingencia;
 import ec.com.vipsoft.ce.backend.service.VerificadorIndisponibilidad;
 import ec.com.vipsoft.ce.sri.autorizacion.wsclient.Autorizacion;
+import ec.com.vipsoft.ce.ui.RegistradorUsuario;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteAutorizado;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
 import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
+import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.erp.abinadi.procesos.RespuestaRecepcionDocumento;
 
 @Stateless
@@ -37,6 +41,8 @@ public class ProcesoEnvioEJB {
 	private EnviadorSRIEJB enviador;
 	@Inject
 	private UtilClaveAcceso utilClaveAcceso;
+	@EJB
+	private RegistradorUsuario registradorUsuario;
 	public void lanzarProcesoEnvio(Map<String,Object> parametros){
 		
 		String rucEntidad=(String) parametros.get("rucEmisor");
@@ -88,11 +94,20 @@ public class ProcesoEnvioEJB {
 			comprobante.setSecuencia((String) parametros.get("secuenciaDocumento"));
 			comprobante.setIdentificacionBeneficiario((String) parametros.get("idCliente"));
 			comprobante.setTipo((TipoComprobante) parametros.get("tipoComprobante"));					
-									
-			DocumentoFirmado documentoFi = new DocumentoFirmado();			
-			documentoFi.setConvertidoEnXML(documentoFirmado);						
-			comprobante.setDocumentoFirmado(documentoFi);	
-			em.persist(comprobante);
+			Query qentidad=em.createQuery("select e from Entidad e where e.ruc=?1");
+			qentidad.setParameter(1, rucEntidad);
+			List<Entidad>listaEntidad=qentidad.getResultList();
+			if(!listaEntidad.isEmpty()){
+				DocumentoFirmado documentoFi = new DocumentoFirmado();			
+				documentoFi.setConvertidoEnXML(documentoFirmado);						
+				comprobante.setDocumentoFirmado(documentoFi);
+				comprobante.setEntidadEmisora(listaEntidad.get(0));
+				//crear al beneficiario si no existe.
+				em.persist(comprobante);
+				em.persist(documentoFi);
+			}
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -50,6 +50,7 @@ import ec.com.vipsoft.ce.backend.service.GeneradorClaveAccesoPorEntidad;
 import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionDetalleBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.ImpuestoRetencion;
+import ec.com.vipsoft.ce.ui.RegistradorUsuario;
 import ec.com.vipsoft.ce.utils.LlenadorNumeroComprobante;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
@@ -84,6 +85,8 @@ public class ReceptorComprobanteRetencionNeutra {
 	private ProcesoEnvioEJB procesoEnvio;
 	@Inject 
 	private LlenadorNumeroComprobante LlenadorNumeroComprobante;
+	@EJB
+	private RegistradorUsuario registradorUsuario;
 	@WebMethod
 	@WebResult(name = "claveAcceso")
 	public String receptarComprobanteRetencion(	@WebParam(name = "retencion") ComprobanteRetencionBinding retencion) {
@@ -250,6 +253,7 @@ public class ReceptorComprobanteRetencionNeutra {
 					parametros.put("idCliente", comprobanteRetencion.getInfoCompRetencion().getIdentificacionSujetoRetenido());
 					parametros.put("tipoComprobante", TipoComprobante.retencion);
 					procesoEnvio.lanzarProcesoEnvio(parametros);
+					registradorUsuario.registrarUsuario(comprobanteRetencion.getInfoCompRetencion().getIdentificacionSujetoRetenido(), comprobanteRetencion.getInfoCompRetencion().getIdentificacionSujetoRetenido(), comprobanteRetencion.getInfoCompRetencion().getRazonSocialSujetoRetenido());
 					retorno=claveAcceso;
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

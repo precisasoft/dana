@@ -80,7 +80,7 @@ public class LoginView extends VerticalLayout implements View {
 		botonLogIn.addClickListener(event -> {
 			System.out.println("se ha hecho click");
 			if (rememberMe.getValue()) {
-				registradorUsuario.registrarUsuario(usuario.getValue(),	password.getValue(), "", "");
+				registradorUsuario.registrarUsuario(usuario.getValue(),	password.getValue(), "");
 			} else {
 				UsernamePasswordToken uptoken=new UsernamePasswordToken();
 				uptoken.setPassword(password.getValue().toCharArray());
