@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,6 +25,7 @@ import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
 import ec.com.vipsoft.erp.abinadi.procesos.RespuestaRecepcionDocumento;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ProcesoEnvioEJB {
 	
 	@PersistenceContext

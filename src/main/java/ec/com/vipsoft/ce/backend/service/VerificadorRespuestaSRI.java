@@ -55,6 +55,9 @@ public class VerificadorRespuestaSRI {
 				for(ComprobanteElectronico c:lista){
 					String autorizacion=verificadorRespuestaIndividual.verificarAutorizacionComprobante(c.getClaveAcceso());
 					
+					//convertir en pdf
+					
+					
 				}
 				
 				
