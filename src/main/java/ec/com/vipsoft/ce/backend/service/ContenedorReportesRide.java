@@ -17,6 +17,12 @@ public class ContenedorReportesRide implements Serializable{
 	private JasperReport rideNotaCredito;
 	private JasperReport rideNotaDebito;
 	private JasperReport rideGuiaRemision;
+	private JasperReport rideFacturaSinLogo;
+	private JasperReport rideRetencionSinLogo;
+	private JasperReport rideNotaCreditoSinLogo;
+	private JasperReport rideNotaDebitoSinLogo;
+	private JasperReport rideGuiaRemisionSinLogo;
+	
 	public JasperReport getRideFactura() {
 		return rideFactura;
 	}
@@ -46,6 +52,36 @@ public class ContenedorReportesRide implements Serializable{
 	}
 	public void setRideGuiaRemision(JasperReport rideGuiaRemision) {
 		this.rideGuiaRemision = rideGuiaRemision;
+	}
+	public JasperReport getRideFacturaSinLogo() {
+		return rideFacturaSinLogo;
+	}
+	public void setRideFacturaSinLogo(JasperReport rideFacturaSinLogo) {
+		this.rideFacturaSinLogo = rideFacturaSinLogo;
+	}
+	public JasperReport getRideRetencionSinLogo() {
+		return rideRetencionSinLogo;
+	}
+	public void setRideRetencionSinLogo(JasperReport rideRetencionSinLogo) {
+		this.rideRetencionSinLogo = rideRetencionSinLogo;
+	}
+	public JasperReport getRideNotaCreditoSinLogo() {
+		return rideNotaCreditoSinLogo;
+	}
+	public void setRideNotaCreditoSinLogo(JasperReport rideNotaCreditoSinLogo) {
+		this.rideNotaCreditoSinLogo = rideNotaCreditoSinLogo;
+	}
+	public JasperReport getRideNotaDebitoSinLogo() {
+		return rideNotaDebitoSinLogo;
+	}
+	public void setRideNotaDebitoSinLogo(JasperReport rideNotaDebitoSinLogo) {
+		this.rideNotaDebitoSinLogo = rideNotaDebitoSinLogo;
+	}
+	public JasperReport getRideGuiaRemisionSinLogo() {
+		return rideGuiaRemisionSinLogo;
+	}
+	public void setRideGuiaRemisionSinLogo(JasperReport rideGuiaRemisionSinLogo) {
+		this.rideGuiaRemisionSinLogo = rideGuiaRemisionSinLogo;
 	}
 	
 }

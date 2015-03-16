@@ -90,15 +90,16 @@ public class DefaultConsultaAutorizacion implements ConsultaAutorizacion{
 					Element elementAutXml = (Element) autorizacionXml.item(j);
 					Autorizacion autorizacion = new Autorizacion();
 					autorizacion.setEstado(elementAutXml.getElementsByTagName("estado").item(0).getFirstChild().getNodeValue());
-					autorizacion.setNumeroAutorizacion(elementAutXml.getElementsByTagName("numeroAutorizacion").item(0).getFirstChild().getNodeValue());
-					// autorizacion.setFechaAutorizacion(elementAutXml.getElementsByTagName("fechaAutorizacion").item(0).getFirstChild().getNodeValue());
-					autorizacion.setAmbiente(elementAutXml.getElementsByTagName("ambiente").item(0).getFirstChild().getNodeValue());
-					autorizacion.setComprobante(elementAutXml.getElementsByTagName("comprobante").item(0).getFirstChild().getNodeValue());
-					// autorizacion.setInformacionAdicional(elementAutXml.getElementsByTagName("mensajes").item(0).getFirstChild().getNodeValue());
-					respuestaAutorizacionComprobante.getAutorizaciones().add(autorizacion);
+					if(autorizacion.getEstado().equalsIgnoreCase("autorizado")){
+						autorizacion.setNumeroAutorizacion(elementAutXml.getElementsByTagName("numeroAutorizacion").item(0).getFirstChild().getNodeValue());
+						// autorizacion.setFechaAutorizacion(elementAutXml.getElementsByTagName("fechaAutorizacion").item(0).getFirstChild().getNodeValue());
+						autorizacion.setAmbiente(elementAutXml.getElementsByTagName("ambiente").item(0).getFirstChild().getNodeValue());
+						autorizacion.setComprobante(elementAutXml.getElementsByTagName("comprobante").item(0).getFirstChild().getNodeValue());
+						// autorizacion.setInformacionAdicional(elementAutXml.getElementsByTagName("mensajes").item(0).getFirstChild().getNodeValue());
+						respuestaAutorizacionComprobante.getAutorizaciones().add(autorizacion);	
+					}					
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

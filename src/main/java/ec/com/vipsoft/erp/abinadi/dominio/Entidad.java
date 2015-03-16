@@ -70,8 +70,18 @@ public class Entidad implements Serializable, Comparable<Entidad> {
     @Column(columnDefinition="varchar(30) unique")
     private String dominioInternet;
     private String usuarioAdministrador;
+    private boolean tieneLogo;
     
-    public String getUsuarioAdministrador() {
+    
+    public boolean isTieneLogo() {
+		return tieneLogo;
+	}
+
+	public void setTieneLogo(boolean tieneLogo) {
+		this.tieneLogo = tieneLogo;
+	}
+
+	public String getUsuarioAdministrador() {
 		return usuarioAdministrador;
 	}
 
