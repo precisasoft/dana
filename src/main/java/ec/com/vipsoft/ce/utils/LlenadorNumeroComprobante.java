@@ -1,6 +1,8 @@
 package ec.com.vipsoft.ce.utils;
 
-public interface LlenadorNumeroComprobante {
+import java.io.Serializable;
+
+public interface LlenadorNumeroComprobante extends Serializable{
 
 	public abstract String llenarNumeroDocumento(String numero);
 

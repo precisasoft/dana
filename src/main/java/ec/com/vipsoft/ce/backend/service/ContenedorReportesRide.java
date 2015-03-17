@@ -22,7 +22,6 @@ public class ContenedorReportesRide implements Serializable{
 	private JasperReport rideNotaCreditoSinLogo;
 	private JasperReport rideNotaDebitoSinLogo;
 	private JasperReport rideGuiaRemisionSinLogo;
-	
 	public JasperReport getRideFactura() {
 		return rideFactura;
 	}
@@ -84,4 +83,5 @@ public class ContenedorReportesRide implements Serializable{
 		this.rideGuiaRemisionSinLogo = rideGuiaRemisionSinLogo;
 	}
 	
+
 }

@@ -1,6 +1,9 @@
 package ec.com.vipsoft.ce.visorride;
 
 import java.io.StringReader;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,9 @@ import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura;
+import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles;
+import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle;
+import ec.com.vipsoft.sri.factura._v1_1_0.Impuesto;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision.InfoAdicional.CampoAdicional;
 import ec.com.vipsoft.sri.notaDebito.v_1_0.NotaDebito;
@@ -76,7 +82,7 @@ public class CreadorRide {
 		List<Entidad> listadoEntidad = qEntidad.getResultList();
 		Autorizacion autorizacion = null;
 		boolean tieneLogo = true;
-		if (listadoEntidad.isEmpty()) {
+		if (!listadoEntidad.isEmpty()) {
 			tieneLogo = true;
 			Entidad entidad = listadoEntidad.get(0);
 			tieneLogo = entidad.isTieneLogo();
@@ -107,7 +113,9 @@ public class CreadorRide {
 					try {
 						RespuestaAutorizacionComprobante _consultarAutorizacion = consultaAutorizacion.consultarAutorizacion(claveAcceso);
 						if (!_consultarAutorizacion.getAutorizaciones().isEmpty()) {
-							autorizacion = _consultarAutorizacion.getAutorizaciones().get(0);
+							if(!_consultarAutorizacion.getAutorizaciones().isEmpty())							
+								autorizacion=_consultarAutorizacion.getAutorizaciones().get(0);
+							
 						}
 					} catch (SOAPException e) {
 						e.printStackTrace();
@@ -131,7 +139,8 @@ public class CreadorRide {
 		if(autorizacion.getNumeroAutorizacion().length()>0){
 			parametros.put("numeroAutorizacion",autorizacion.getNumeroAutorizacion());
 		}
-		parametros.put("fechaHoraAutorizacion", autorizacion.getFechaAutorizacion());		
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		parametros.put("fechaHoraAutorizacion", sdf.format(autorizacion.getFechaAutorizacion()));		
 		JRBeanCollectionDataSource datos=null;				
 		JasperReport reporte=obtenerReporte(claveAcceso,tieneLogo);
 		
@@ -141,15 +150,14 @@ public class CreadorRide {
 		switch (ca) {  
 		case "01":	//factura
 		{
+			ArrayList<ReporteFacturaDetalleBean>detalles=new ArrayList<>();
 			JAXBContext contextoFactura = JAXBContext.newInstance(Factura.class);			
 			Unmarshaller unmarshallerFactura=contextoFactura.createUnmarshaller();
-			Factura comprobante=(Factura)unmarshallerFactura.unmarshal(new InputSource(autorizacion.getComprobante()));
-			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			Factura comprobante=(Factura)unmarshallerFactura.unmarshal(new InputSource(new StringReader(autorizacion.getComprobante())));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getEstab()+"-"+comprobante.getInfoTributaria().getPtoEmi()+"-"+comprobante.getInfoTributaria().getSecuencial());
 			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
 			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
-			
-			
-			
+			parametros.put("direccionSucursal",comprobante.getInfoFactura().getDirEstablecimiento());
 			
 			int i=1;
 			for(ec.com.vipsoft.sri.factura._v1_1_0.Factura.InfoAdicional.CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
@@ -157,12 +165,118 @@ public class CreadorRide {
 				i++;
 			}
 			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
-			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
-			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
-			parametros.put("obligadoContabilidad",comprobante.getInfoFactura().getObligadoContabilidad());
-			parametros.put("resolucionEspecial",comprobante.getInfoFactura().getContribuyenteEspecial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());
+			if(comprobante.getInfoTributaria().getTipoEmision().equalsIgnoreCase("1")){
+				parametros.put("tipoEmision","NORMAL");	
+			}else{
+				parametros.put("tipoEmision","CONTINGENCIA");
+			}
+						
+			parametros.put("obligadoContabilidad",comprobante.getInfoFactura().getObligadoContabilidad().toString());			
+			parametros.put("resolucionEspecial", comprobante.getInfoFactura().getContribuyenteEspecial());
+				// ///////////////////////////////////////////////////////////7
+				// /////////////////////////////////////////////////////////////
+				// trampita con rocarsystem
+				if (comprobante.getInfoTributaria().getRuc()
+						.equalsIgnoreCase("1791739477001")) {
+					parametros.put("resolucionEspecial", "826");
+				}
 			
 			
+			
+			parametros.put("identificacionCliente",comprobante.getInfoFactura().getIdentificacionComprador());
+			parametros.put("razonSocialCliente",comprobante.getInfoFactura().getRazonSocialComprador());
+			parametros.put("fechaEmision",comprobante.getInfoFactura().getFechaEmision());
+			
+			
+			
+			parametros.put("guiaRemision",comprobante.getInfoFactura().getGuiaRemision());
+			BigDecimal subtotal12=BigDecimal.ZERO;
+			BigDecimal subtotalIva0=BigDecimal.ZERO;
+			BigDecimal subtotalNoObjetoIVA=BigDecimal.ZERO;
+			BigDecimal subtotalExentoIva=BigDecimal.ZERO;
+			BigDecimal ice=BigDecimal.ZERO;
+			BigDecimal iva12=BigDecimal.ZERO;
+			BigDecimal totalDescuento=comprobante.getInfoFactura().getTotalDescuento();
+			
+			for( Detalle detalle :comprobante.getDetalles().getDetalle()){
+				ReporteFacturaDetalleBean _detalle=new ReporteFacturaDetalleBean();
+				_detalle.setCantidad(detalle.getCantidad());
+				_detalle.setCodigoPrincipal(detalle.getCodigoPrincipal());
+				_detalle.setCodigoAuxiliar(detalle.getCodigoAuxiliar());
+				_detalle.setDescripcion(detalle.getDescripcion());
+				_detalle.setDescuento(detalle.getDescuento());
+				_detalle.setPrecioUnitario(detalle.getPrecioUnitario());
+				_detalle.setPrecioTotal(detalle.getPrecioTotalSinImpuesto());
+				if(detalle.getDetallesAdicionales()!=null){
+					if(detalle.getDetallesAdicionales().getDetAdicional()!=null){
+						if(!detalle.getDetallesAdicionales().getDetAdicional().isEmpty()){
+							if(detalle.getDetallesAdicionales().getDetAdicional().get(0)!=null){
+								_detalle.setDetalleAdicional(detalle.getDetallesAdicionales().getDetAdicional().get(0).getValor());
+							}	
+						}
+							
+					}
+						
+				}				
+				//_detalle.setDetalleAdicional(detalle.getDetallesAdicionales().getDetAdicional().get(0).);
+				
+				for(Impuesto impuesto:detalle.getImpuestos().getImpuesto()){
+					
+					//iva
+					if(impuesto.getCodigo().equalsIgnoreCase("2")){
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("2")){
+							subtotal12=subtotal12.add(impuesto.getBaseImponible());
+							iva12=iva12.add(impuesto.getValor());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("0")){
+							subtotalIva0=subtotalIva0.add(impuesto.getBaseImponible());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("6")){
+							subtotalNoObjetoIVA=subtotalNoObjetoIVA.add(impuesto.getBaseImponible());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("7")){
+							subtotalExentoIva=subtotalExentoIva.add(impuesto.getBaseImponible());
+						}
+					}
+					//ice
+					if(impuesto.getCodigo().equalsIgnoreCase("3")){
+						ice=ice.add(impuesto.getValor());
+								
+					}
+					//IRBPNR
+					if(impuesto.getCodigo().equalsIgnoreCase("5")){
+						
+					}
+				}
+				detalles.add(_detalle);
+			}
+		//totalDescuento=totalDescuento.add(detalle.getDescuento());
+		parametros.put("subtotal12",subtotal12);
+		parametros.put("subtotal0", subtotalIva0);
+		parametros.put("subtotalNoObjetoIVA", subtotalNoObjetoIVA);
+		parametros.put("subtotalExentoIVA", subtotalExentoIva);
+		BigDecimal totalSinImpuestos=BigDecimal.ZERO;
+		totalSinImpuestos=totalSinImpuestos.add(subtotal12);
+		totalSinImpuestos=totalSinImpuestos.add(subtotalIva0);
+		totalSinImpuestos=totalSinImpuestos.add(subtotalNoObjetoIVA);
+		totalSinImpuestos=totalSinImpuestos.add(subtotalExentoIva);
+		
+		
+		
+		
+		parametros.put("subtotalSinImpuestos", totalSinImpuestos);
+		parametros.put("totalDescuento", totalDescuento);
+		parametros.put("ice",ice);
+		parametros.put("iva12",iva12);
+		parametros.put("irbpnr", BigDecimal.ZERO);
+		parametros.put("propina",BigDecimal.ZERO);
+		BigDecimal valorTotal=comprobante.getInfoFactura().getImporteTotal();
+		parametros.put("valorTotal",valorTotal);
+			
+			//parte de los totales en los parametros ..
+			//datos ....
+			datos=new JRBeanCollectionDataSource(detalles);			
 		}	
 			break;
 		case "04":  //nota de credito
@@ -180,7 +294,7 @@ public class CreadorRide {
 			}
 			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
 			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
-			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
+			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());		
 			parametros.put("obligadoContabilidad",comprobante.getInfoNotaCredito().getObligadoContabilidad());
 			parametros.put("resolucionEspecial",comprobante.getInfoNotaCredito().getContribuyenteEspecial());
 			
@@ -281,7 +395,8 @@ public class CreadorRide {
 			if (tieneLogo) {
 				reporte = contenedorRIDE.getRideFactura();
 			} else {
-				reporte = contenedorRIDE.getRideFacturaSinLogo();
+				reporte = contenedorRIDE.getRideFactura(); //para pruebas
+				//reporte = contenedorRIDE.getRideFacturaSinLogo();  //correcto
 			}
 			break;
 		case "04": // nota de credito

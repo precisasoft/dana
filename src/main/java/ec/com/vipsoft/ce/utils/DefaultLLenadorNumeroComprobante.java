@@ -5,6 +5,11 @@ import java.util.StringTokenizer;
 public class DefaultLLenadorNumeroComprobante implements
 		LlenadorNumeroComprobante {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3601066058434444103L;
+
 	/*
 	 * (non-Javadoc)
 	 * 

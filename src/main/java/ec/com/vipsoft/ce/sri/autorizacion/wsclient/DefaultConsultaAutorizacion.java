@@ -2,6 +2,7 @@ package ec.com.vipsoft.ce.sri.autorizacion.wsclient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 
 import javax.inject.Inject;
 import javax.xml.namespace.QName;
@@ -73,6 +74,7 @@ public class DefaultConsultaAutorizacion implements ConsultaAutorizacion{
 	}
 
 	public RespuestaAutorizacionComprobante converToRespuestaAutorizacionDocumento(	String xmlRespuesta) {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		RespuestaAutorizacionComprobante respuestaAutorizacionComprobante = new RespuestaAutorizacionComprobante();
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -92,7 +94,7 @@ public class DefaultConsultaAutorizacion implements ConsultaAutorizacion{
 					autorizacion.setEstado(elementAutXml.getElementsByTagName("estado").item(0).getFirstChild().getNodeValue());
 					if(autorizacion.getEstado().equalsIgnoreCase("autorizado")){
 						autorizacion.setNumeroAutorizacion(elementAutXml.getElementsByTagName("numeroAutorizacion").item(0).getFirstChild().getNodeValue());
-						// autorizacion.setFechaAutorizacion(elementAutXml.getElementsByTagName("fechaAutorizacion").item(0).getFirstChild().getNodeValue());
+					    autorizacion.setFechaAutorizacion(sdf.parse(elementAutXml.getElementsByTagName("fechaAutorizacion").item(0).getFirstChild().getNodeValue()));
 						autorizacion.setAmbiente(elementAutXml.getElementsByTagName("ambiente").item(0).getFirstChild().getNodeValue());
 						autorizacion.setComprobante(elementAutXml.getElementsByTagName("comprobante").item(0).getFirstChild().getNodeValue());
 						// autorizacion.setInformacionAdicional(elementAutXml.getElementsByTagName("mensajes").item(0).getFirstChild().getNodeValue());
