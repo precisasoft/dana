@@ -30,7 +30,9 @@ import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision;
+import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision.InfoAdicional.CampoAdicional;
 import ec.com.vipsoft.sri.notaDebito.v_1_0.NotaDebito;
+import ec.com.vipsoft.sri.notaDebito.v_1_0.NotaDebito.InfoAdicional;
 import ec.com.vipsoft.sri.notacredito._v1_1_0.NotaCredito;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -124,11 +126,12 @@ public class CreadorRide {
 		}else{
 			parametros.put("ambiente", "PRODUCCION");
 		}
+		parametros.put("claveAcceso", claveAcceso);
 		parametros.put("numeroAutorizacion","NO AUTORIZADO");
 		if(autorizacion.getNumeroAutorizacion().length()>0){
 			parametros.put("numeroAutorizacion",autorizacion.getNumeroAutorizacion());
 		}
-		parametros.put("fechaHoraAutorizacion", autorizacion.getFechaAutorizacion());				
+		parametros.put("fechaHoraAutorizacion", autorizacion.getFechaAutorizacion());		
 		JRBeanCollectionDataSource datos=null;				
 		JasperReport reporte=obtenerReporte(claveAcceso,tieneLogo);
 		
@@ -141,6 +144,25 @@ public class CreadorRide {
 			JAXBContext contextoFactura = JAXBContext.newInstance(Factura.class);			
 			Unmarshaller unmarshallerFactura=contextoFactura.createUnmarshaller();
 			Factura comprobante=(Factura)unmarshallerFactura.unmarshal(new InputSource(autorizacion.getComprobante()));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
+			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			
+			
+			
+			
+			int i=1;
+			for(ec.com.vipsoft.sri.factura._v1_1_0.Factura.InfoAdicional.CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
+				parametros.put("adicional"+i, campoAdicional.getNombre()+" "+campoAdicional.getValue());
+				i++;
+			}
+			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
+			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
+			parametros.put("obligadoContabilidad",comprobante.getInfoFactura().getObligadoContabilidad());
+			parametros.put("resolucionEspecial",comprobante.getInfoFactura().getContribuyenteEspecial());
+			
+			
 		}	
 			break;
 		case "04":  //nota de credito
@@ -148,6 +170,20 @@ public class CreadorRide {
 			JAXBContext contextoNc=JAXBContext.newInstance(NotaCredito.class);
 			Unmarshaller unmarshallerNC=contextoNc.createUnmarshaller();
 			NotaCredito comprobante=(NotaCredito)unmarshallerNC.unmarshal(new InputSource(autorizacion.getComprobante()));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
+			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			int i=1;
+			for(ec.com.vipsoft.sri.notacredito._v1_1_0.NotaCredito.InfoAdicional.CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
+				parametros.put("adicional"+i, campoAdicional.getNombre()+" "+campoAdicional.getValue());
+				i++;
+			}
+			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
+			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
+			parametros.put("obligadoContabilidad",comprobante.getInfoNotaCredito().getObligadoContabilidad());
+			parametros.put("resolucionEspecial",comprobante.getInfoNotaCredito().getContribuyenteEspecial());
+			
 		}	
 			break;
 		case "05":  //nota de debito
@@ -155,6 +191,22 @@ public class CreadorRide {
 			JAXBContext contextoND=JAXBContext.newInstance(NotaDebito.class);
 			Unmarshaller unmarshalleND=contextoND.createUnmarshaller();
 			NotaDebito comprobante=(NotaDebito)unmarshalleND.unmarshal(new InputSource(autorizacion.getComprobante()));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
+			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			
+			
+			int i=1;
+			for(InfoAdicional.CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
+				parametros.put("adicional"+i, campoAdicional.getNombre()+" "+campoAdicional.getValue());
+				i++;
+			}
+			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
+			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
+			parametros.put("obligadoContabilidad",comprobante.getInfoNotaDebito().getObligadoContabilidad());
+			parametros.put("resolucionEspecial",comprobante.getInfoNotaDebito().getContribuyenteEspecial());
+			
 		}
 			break;
 		case "06": //guia remision
@@ -162,13 +214,43 @@ public class CreadorRide {
 			JAXBContext contextoGuiaRemision=JAXBContext.newInstance(GuiaRemision.class);
 			Unmarshaller unmarshallerGR=contextoGuiaRemision.createUnmarshaller();
 			GuiaRemision comprobante=(GuiaRemision)unmarshallerGR.unmarshal(new InputSource(autorizacion.getComprobante()));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
+			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			
+			
+			int i=1;
+			for(CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
+				parametros.put("adicional"+i, campoAdicional.getNombre()+" "+campoAdicional.getValue());
+				i++;
+			}
+			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
+			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
+			parametros.put("obligadoContabilidad",comprobante.getInfoGuiaRemision().getObligadoContabilidad());
+			parametros.put("resolucionEspecial",comprobante.getInfoGuiaRemision().getContribuyenteEspecial());
+			
 		}
 			break;
 		case "07":  //retencion
 		{
 			JAXBContext contextoRetencion=JAXBContext.newInstance(ComprobanteRetencion.class);
 			Unmarshaller unmarshaller=contextoRetencion.createUnmarshaller();
-			ComprobanteRetencion comprobante=(ComprobanteRetencion)unmarshaller.unmarshal(new InputSource(autorizacion.getComprobante()));			
+			ComprobanteRetencion comprobante=(ComprobanteRetencion)unmarshaller.unmarshal(new InputSource(autorizacion.getComprobante()));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
+			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			
+			int i=1;
+			for(ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion.InfoAdicional.CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
+				parametros.put("adicional"+i, campoAdicional.getNombre()+" "+campoAdicional.getValue());
+				i++;
+			}
+			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
+			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
+			parametros.put("obligadoContabilidad",comprobante.getInfoCompRetencion().getObligadoContabilidad());
+			parametros.put("resolucionEspecial",comprobante.getInfoCompRetencion().getContribuyenteEspecial());
 		}
 			break;
 			

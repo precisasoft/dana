@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2015-03-16T18:10:10 -->
+<!-- 2015-03-16T20:28:30 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ride_factura_1_1_0" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c657c4f3-61fd-4627-a281-efbb7413152a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="numeroDocumento" class="java.lang.String"/>
@@ -31,6 +31,12 @@
 	<parameter name="adicional3" class="java.lang.String"/>
 	<parameter name="adicional4" class="java.lang.String"/>
 	<parameter name="rucEmisor" class="java.lang.String"/>
+	<parameter name="razonSocialEmisor" class="java.lang.String"/>
+	<parameter name="nombreComercial" class="java.lang.String"/>
+	<parameter name="direccionMatriz" class="java.lang.String"/>
+	<parameter name="direccionSucursal" class="java.lang.String"/>
+	<parameter name="obligadoContabilidad" class="java.lang.String"/>
+	<parameter name="resolucionEspecial" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -59,13 +65,6 @@
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[RUC]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="357" y="5" width="100" height="20" uuid="06092b19-58a5-495e-8733-cc0aa74ec3ce"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[1791739477001]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="316" y="26" width="160" height="20" uuid="25042a7b-e49c-4770-b429-0ddc863bc91b"/>
@@ -137,7 +136,7 @@
 				<text><![CDATA[EMISIÓN]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="503" y="122" width="52" height="15" uuid="3304ebab-d4a9-4fb7-a4ff-f00bc2daa536"/>
+				<reportElement x="503" y="122" width="46" height="15" uuid="3304ebab-d4a9-4fb7-a4ff-f00bc2daa536"/>
 				<textFieldExpression><![CDATA[$P{tipoEmision}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -160,26 +159,6 @@
 				</jr:barbecue>
 			</componentElement>
 			<staticText>
-				<reportElement x="3" y="63" width="256" height="13" uuid="b170876a-07ed-42f9-ae02-c9c1fc7fa849">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SISTEMAS DE SALUD ROCARSYSTEM S.A.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="78" width="100" height="13" uuid="3077fc66-8251-43f4-8696-5280c7844e03">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[ROCARSYSTEM S.A.]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="3" y="93" width="54" height="25" uuid="8a310340-5839-48c0-8e84-e2989e23e7da">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -188,16 +167,6 @@
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Dirección Matriz:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="60" y="93" width="200" height="25" uuid="6b5eba2d-0650-4a4b-b329-0e5a580555d7">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[URDESA CENTRAL TODOS LOS SANTOS 201 Y CIRCUNVALACIÓN SUR]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="2" y="119" width="54" height="25" uuid="3655b7d8-44d8-448f-b5ec-cc651576ed19">
@@ -210,28 +179,20 @@
 				<text><![CDATA[Dirección Sucursal:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="60" y="119" width="200" height="25" uuid="fea510d3-464d-42c4-af0e-11408f189bbc">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement x="3" y="146" width="146" height="14" uuid="6e6a61ec-d568-4e7a-8029-1630a9d7014e">
+					<printWhenExpression><![CDATA[$P{resolucionEspecial}.length()>0]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[URDESA CENTRAL TODOS LOS SANTOS 201 Y CIRCUNVALACIÓN SUR]]></text>
+				<text><![CDATA[CONTRIBUYENTE ESPECIAL Nro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="3" y="146" width="220" height="14" uuid="6e6a61ec-d568-4e7a-8029-1630a9d7014e"/>
+				<reportElement x="2" y="162" width="166" height="18" uuid="11cb2b32-9d96-40f1-9aa5-cfe5422fc393"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[CONTRIBUYENTE ESPECIAL Nro   826]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="162" width="220" height="18" uuid="11cb2b32-9d96-40f1-9aa5-cfe5422fc393"/>
-				<textElement>
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[OBLIGADO A LLEVAR CONTABILIDAD  SI]]></text>
+				<text><![CDATA[OBLIGADO A LLEVAR CONTABILIDAD ]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="0" y="200" width="551" height="60" uuid="32772f21-6d76-4b55-8a07-6cfd572fd181"/>
@@ -302,6 +263,43 @@
 				<reportElement x="0" y="5" width="223" height="56" uuid="9d18a84d-4603-4c95-8f30-68c9cd3682a4"/>
 				<imageExpression><![CDATA["/home/chrisvv/"+$P{rucEmisor}+".png"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="0" y="62" width="270" height="16" uuid="e76a1466-6a36-4b88-b93d-996f4bed43d4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{razonSocialEmisor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="79" width="269" height="14" uuid="5b11d27c-7cf3-4340-afc7-46fd23cf32e5"/>
+				<textFieldExpression><![CDATA[$P{nombreComercial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="61" y="93" width="208" height="24" uuid="87b7cfb3-a7d4-4349-bd84-c94828694276"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{direccionMatriz}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="61" y="119" width="208" height="24" uuid="3c8a480f-4a7c-4b44-b9df-6aaffa2273d4"/>
+				<textFieldExpression><![CDATA[$P{direccionSucursal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="169" y="162" width="30" height="18" uuid="38c0f7cd-674b-4de8-926b-75347f6caf97"/>
+				<textFieldExpression><![CDATA[$P{obligadoContabilidad}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="150" y="146" width="48" height="16" uuid="80218845-22fc-40c7-bc78-1f8600cb0c50"/>
+				<textFieldExpression><![CDATA[$P{resolucionEspecial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="5" width="184" height="20" uuid="b9c9b4cd-fe46-4f7c-9955-9819c5715dc5"/>
+				<textElement>
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rucEmisor}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
