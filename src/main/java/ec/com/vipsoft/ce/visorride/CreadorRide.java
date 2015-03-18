@@ -32,7 +32,6 @@ import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura;
-import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle;
 import ec.com.vipsoft.sri.factura._v1_1_0.Impuesto;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision;
@@ -127,6 +126,16 @@ public class CreadorRide {
 			}
 		} else {
 			tieneLogo = false;
+			try {
+				RespuestaAutorizacionComprobante _consultarAutorizacion = consultaAutorizacion.consultarAutorizacion(claveAcceso);
+				if (!_consultarAutorizacion.getAutorizaciones().isEmpty()) {
+					if(!_consultarAutorizacion.getAutorizaciones().isEmpty())							
+						autorizacion=_consultarAutorizacion.getAutorizaciones().get(0);
+					
+				}
+			} catch (SOAPException e) {
+				e.printStackTrace();
+			}
 		}		
 		Map<String,Object>parametros=new HashMap<>();
 		if(autorizacion.getAmbiente().equalsIgnoreCase("PRUEBAS")){
