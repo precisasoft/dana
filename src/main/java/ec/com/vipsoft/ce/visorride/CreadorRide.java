@@ -48,6 +48,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Stateless
 public class CreadorRide {
 	
+	
 	@Inject
 	private UtilClaveAcceso utilClaveAcceso;
 	@EJB
@@ -113,8 +114,7 @@ public class CreadorRide {
 						RespuestaAutorizacionComprobante _consultarAutorizacion = consultaAutorizacion.consultarAutorizacion(claveAcceso);
 						if (!_consultarAutorizacion.getAutorizaciones().isEmpty()) {
 							if(!_consultarAutorizacion.getAutorizaciones().isEmpty())							
-								autorizacion=_consultarAutorizacion.getAutorizaciones().get(0);
-							
+								autorizacion=_consultarAutorizacion.getAutorizaciones().get(0);							
 						}
 					} catch (SOAPException e) {
 						e.printStackTrace();
@@ -285,7 +285,7 @@ public class CreadorRide {
 			
 			//parte de los totales en los parametros ..
 			//datos ....
-			datos=new JRBeanCollectionDataSource(detalles);			
+			datos=new JRBeanCollectionDataSource(detalles,false);			
 		}	
 			break;
 		case "04":  //nota de credito
@@ -359,8 +359,9 @@ public class CreadorRide {
 		{
 			JAXBContext contextoRetencion=JAXBContext.newInstance(ComprobanteRetencion.class);
 			Unmarshaller unmarshaller=contextoRetencion.createUnmarshaller();
-			ComprobanteRetencion comprobante=(ComprobanteRetencion)unmarshaller.unmarshal(new InputSource(autorizacion.getComprobante()));
-			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			ArrayList<ReporteRetencionDetalleBean>_detalles=new ArrayList<>();
+			ComprobanteRetencion comprobante=(ComprobanteRetencion)unmarshaller.unmarshal(new InputSource(new StringReader(autorizacion.getComprobante())));
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getEstab()+"-"+comprobante.getInfoTributaria().getPtoEmi()+"-"+comprobante.getInfoTributaria().getSecuencial());
 			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
 			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
 			
@@ -370,10 +371,61 @@ public class CreadorRide {
 				i++;
 			}
 			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
-			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("direccionSucursal",comprobante.getInfoCompRetencion().getDirEstablecimiento());
 			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
-			parametros.put("obligadoContabilidad",comprobante.getInfoCompRetencion().getObligadoContabilidad());
+			parametros.put("obligadoContabilidad",comprobante.getInfoCompRetencion().getObligadoContabilidad().toString());
 			parametros.put("resolucionEspecial",comprobante.getInfoCompRetencion().getContribuyenteEspecial());
+			
+			
+			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());
+			if(comprobante.getInfoTributaria().getTipoEmision().equalsIgnoreCase("1")){
+				parametros.put("tipoEmision","NORMAL");	
+			}else{
+				parametros.put("tipoEmision","CONTINGENCIA");
+			}
+			parametros.put("identificacionCliente",comprobante.getInfoCompRetencion().getIdentificacionSujetoRetenido());
+			parametros.put("razonSocialCliente",comprobante.getInfoCompRetencion().getRazonSocialSujetoRetenido());
+			parametros.put("fechaEmision",comprobante.getInfoCompRetencion().getFechaEmision());
+			for(ec.com.vipsoft.sri.comprobanteRetencion._v1_0.Impuesto impuesto:comprobante.getImpuestos().getImpuesto()){
+				ReporteRetencionDetalleBean detalle=new ReporteRetencionDetalleBean();
+				if(impuesto.getCodDocSustento().equalsIgnoreCase("01")){
+					detalle.setComprobante("FACTURA");
+				}
+				if(impuesto.getCodDocSustento().equalsIgnoreCase("04")){
+					detalle.setComprobante("NOTA DE CREDITO");
+				}
+				if(impuesto.getCodDocSustento().equalsIgnoreCase("05")){
+					detalle.setComprobante("NOTA DE DEBITO");
+				}
+				if(impuesto.getCodDocSustento().equalsIgnoreCase("06")){
+					detalle.setComprobante("GUIA DE REMISION");
+				}
+				if(impuesto.getCodDocSustento().equalsIgnoreCase("07")){
+					detalle.setComprobante("COMPROBANTE DE RETENCION");
+				}
+				detalle.setBaseImponible(impuesto.getBaseImponible());
+				detalle.setEjercicioFiscal(comprobante.getInfoCompRetencion().getPeriodoFiscal());
+				detalle.setFechaEmision(impuesto.getFechaEmisionDocSustento());
+				if(impuesto.getCodigo().equalsIgnoreCase("1")){
+					detalle.setImpuesto("RENTA");	
+				}
+				if(impuesto.getCodigo().equalsIgnoreCase("2")){
+					detalle.setImpuesto("IVA");	
+				}
+				if(impuesto.getCodigo().equalsIgnoreCase("6")){
+					detalle.setImpuesto("ISD");	
+				}
+				detalle.setNumero(impuesto.getNumDocSustento());
+				detalle.setPorcentajeRetencion(impuesto.getPorcentajeRetener());
+				detalle.setValorRetenido(impuesto.getValorRetenido());
+				
+				_detalles.add(detalle);
+			}
+		
+			
+			datos=new JRBeanCollectionDataSource(_detalles,false);
 		}
 			break;
 			
@@ -404,7 +456,7 @@ public class CreadorRide {
 			if (tieneLogo) {
 				reporte = contenedorRIDE.getRideFactura();
 			} else {
-				reporte = contenedorRIDE.getRideFactura(); //para pruebas
+				reporte = contenedorRIDE.getRideFacturaSinLogo(); //para pruebas
 				//reporte = contenedorRIDE.getRideFacturaSinLogo();  //correcto
 			}
 			break;

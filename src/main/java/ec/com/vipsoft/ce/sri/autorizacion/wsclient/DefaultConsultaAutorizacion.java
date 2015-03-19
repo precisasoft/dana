@@ -99,6 +99,9 @@ public class DefaultConsultaAutorizacion implements ConsultaAutorizacion{
 						autorizacion.setComprobante(elementAutXml.getElementsByTagName("comprobante").item(0).getFirstChild().getNodeValue());
 						// autorizacion.setInformacionAdicional(elementAutXml.getElementsByTagName("mensajes").item(0).getFirstChild().getNodeValue());
 						respuestaAutorizacionComprobante.getAutorizaciones().add(autorizacion);	
+						
+							
+							
 					}					
 				}
 			}

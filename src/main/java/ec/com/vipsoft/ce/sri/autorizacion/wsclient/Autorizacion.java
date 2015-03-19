@@ -31,6 +31,7 @@ public class Autorizacion {
 	private String comprobante;
 	@XmlElement(required=false)
 	private String informacionAdicional;
+	
 	public String getEstado() {
 		return estado;
 	}

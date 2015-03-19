@@ -64,10 +64,18 @@ public class MyContextListener extends org.apache.shiro.web.env.EnvironmentLoade
  		
  		LOG.info("<------------------------  FIN DE LISTA DE PROCESOS DESPLEGADOS ---------------------->");
  		
- 		JasperReport jasperFactura;
+ 		
 		try {
-			jasperFactura = (JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_factura_1_1_0.jasper"));
+			JasperReport jasperFactura = (JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_factura_1_1_0.jasper"));
+			JasperReport jasperFacturaNoLogo=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_factura_1_1_0_nologo.jasper"));
+			JasperReport jasperRetencion=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_retencion_1_0.jasper"));
+			JasperReport jasperRetencionNoLogo=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_retencion_1_0_nologo.jasper"));
+			
 			contenedorRide.setRideFactura(jasperFactura);
+			contenedorRide.setRideFacturaSinLogo(jasperFacturaNoLogo);
+			contenedorRide.setRideRetencion(jasperRetencion);
+			contenedorRide.setRideRetencionSinLogo(jasperRetencionNoLogo);
+			
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

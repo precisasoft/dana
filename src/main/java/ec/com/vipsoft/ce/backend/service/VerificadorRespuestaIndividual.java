@@ -44,10 +44,10 @@ public class VerificadorRespuestaIndividual {
 			marshaller=contexto.createMarshaller();		
 			for(ComprobanteElectronico c:listaComprobantes){
 				RespuestaAutorizacionComprobante respuesta = consultorAutorizacion.consultarAutorizacion(c.getClaveAcceso());
+				ComprobanteElectronico elcomprobante=em.find(ComprobanteElectronico.class, c.getId());
+				elcomprobante.setAutorizacionConsultadoAlSRI(true);
 				if(!respuesta.getAutorizaciones().isEmpty()){
-					for(Autorizacion a:respuesta.getAutorizaciones()){
-						ComprobanteElectronico elcomprobante=em.find(ComprobanteElectronico.class, c.getId());
-						elcomprobante.setAutorizacionConsultadoAlSRI(true);
+					for(Autorizacion a:respuesta.getAutorizaciones()){										
 						if(a.getEstado().equalsIgnoreCase("AUTORIZADO")){
 							//aqui construir el pdf ... y xml ... 							
 							elcomprobante.setAutorizado(true);

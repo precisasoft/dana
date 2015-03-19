@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2015-03-18T18:02:06 -->
+<!-- 2015-03-18T13:32:49 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ride_factura_1_1_0" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c657c4f3-61fd-4627-a281-efbb7413152a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="numeroDocumento" class="java.lang.String"/>
@@ -198,11 +198,11 @@
 				<reportElement x="0" y="200" width="551" height="60" uuid="32772f21-6d76-4b55-8a07-6cfd572fd181"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="3" y="200" width="76" height="31" forecolor="#030303" uuid="9a5f2fdb-31f0-41d6-b3bc-54acb4aed157">
+				<reportElement x="3" y="200" width="76" height="45" forecolor="#030303" uuid="9a5f2fdb-31f0-41d6-b3bc-54acb4aed157">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement verticalAlignment="Top">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Razón Social/ Nombres y Apellidos:]]></text>
@@ -259,10 +259,6 @@
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{guiaRemision}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="0" y="5" width="223" height="56" uuid="9d18a84d-4603-4c95-8f30-68c9cd3682a4"/>
-				<imageExpression><![CDATA["/home/chrisvv/"+$P{rucEmisor}+".png"]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="0" y="62" width="270" height="16" uuid="e76a1466-6a36-4b88-b93d-996f4bed43d4"/>
 				<textElement>
