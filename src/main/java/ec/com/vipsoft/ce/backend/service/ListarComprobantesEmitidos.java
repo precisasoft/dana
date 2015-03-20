@@ -59,6 +59,7 @@ public class ListarComprobantesEmitidos {
 				if(c.getTipo().equals(TipoComprobante.retencion)){
 					bean.setTipo("RETENCION");
 				}
+				listadoRetorno.add(bean);
 			}	
 		}
 		

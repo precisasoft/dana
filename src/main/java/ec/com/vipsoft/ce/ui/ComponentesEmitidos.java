@@ -15,6 +15,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.HtmlRenderer;
 
 import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
 import ec.com.vipsoft.ce.backend.service.ListarComprobantesEmitidos;
@@ -31,39 +32,60 @@ public class ComponentesEmitidos extends VerticalLayout implements View{
 	private BeanItemContainer<ComprobanteRideXmlBean>beanItemContainer;
 	@Override
 	public void enter(ViewChangeEvent event) {
-		actualizarVista();
+	//	actualizarVista();
 		
 	}
 	public ComponentesEmitidos() {
 		super();
+		
 		beanItemContainer=new BeanItemContainer<ComprobanteRideXmlBean>(ComprobanteRideXmlBean.class);	
-		grid=new Grid(beanItemContainer);
+		grid=new Grid(beanItemContainer);	
+		grid.setColumnOrder("tipo","numeroDocumento","claveAcceso","autorizacion","fechaAprobacion");
+		grid.getColumn("claveAcceso").setRenderer(new HtmlRenderer());
+		grid.getColumn("autorizacion").setRenderer(new HtmlRenderer());
+		grid.setSizeFull();
+		
+		setMargin(true);
+		setSpacing(true);
+		setSizeFull();
 		addComponent(grid);
 	}
 	@PostConstruct
 	public void actualizarVista(){
+		System.out.println("llamado postconstruct");
 		Long ultimo=0l;
 		List<ComprobanteEmitido> listarSiguientes = listadoComprobantesEmitidos.listarSiguientes(userInfo.getRucEmisor(),userInfo.getMinSearch());
 		for(ComprobanteEmitido c:listarSiguientes){
+			System.out.println(c.getId());
 			ultimo=c.getId();
 			ComprobanteRideXmlBean bean=new ComprobanteRideXmlBean();
-			Link claveAcceso=new Link(c.getClaveAcceso(),new ExternalResource(VaadinServlet.getCurrent().getServletContext().getContextPath()+"VisorRide?claveAcceso="+c.getClaveAcceso()));
-			claveAcceso.setTargetName("_blank");
-			bean.setClaveAcceso(claveAcceso);
+			StringBuilder sbca=new StringBuilder("<a href='");
+			sbca.append(VaadinServlet.getCurrent().getServletContext().getContextPath());
+			sbca.append("/VisorRide?claveAcceso=");
+			sbca.append(c.getClaveAcceso());
+			sbca.append("' target='_blank'>");
+			sbca.append(c.getClaveAcceso());
+			sbca.append("</a>");
+			bean.setClaveAcceso(sbca.toString());
+			
+			
+			
 			bean.setNumeroDocumento(c.getNumeroDocumento());
-			Link autorizacion=new Link(c.getClaveAcceso(),new ExternalResource(VaadinServlet.getCurrent().getServletContext().getContextPath()+"VisorRide?claveAcceso="+c.getClaveAcceso()));
-			autorizacion.setTargetName("_blank");
-			bean.setAutorizacion(autorizacion);
+			StringBuilder sba=new StringBuilder("<a href='");
+			sba.append(VaadinServlet.getCurrent().getServletContext().getContextPath());
+			sba.append("/VisorRide?claveAcceso=");
+			sba.append(c.getNumeroAutorizacion());
+			sba.append("' target='_blank'>");
+			sba.append(c.getNumeroAutorizacion());
+			sba.append("</a>");
+			bean.setAutorizacion(sba.toString());
 			bean.setTipo(c.getTipo());
 			if(c.getFechaAutorizacion()!=null)
 				bean.setFechaAprobacion(c.getFechaAutorizacion());
 			
 			
-			
-			
-			
 			beanItemContainer.addBean(bean);
-			
+			grid.setContainerDataSource(beanItemContainer);
 		}
 	}
 	
