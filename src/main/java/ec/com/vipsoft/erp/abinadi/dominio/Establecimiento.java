@@ -27,6 +27,10 @@ public class Establecimiento implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String codigo;
 	private String direccion;
+	private String placaVehiculo;
+	private String identificacionTransportista;
+	private String razonSocialTransportista;
+	
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<PuntoVenta> pos;
 	
@@ -117,6 +121,30 @@ public class Establecimiento implements Serializable {
 		}
 	
 		return retorno;
+	}
+
+	public String getPlacaVehiculo() {
+		return placaVehiculo;
+	}
+
+	public void setPlacaVehiculo(String placaVehiculo) {
+		this.placaVehiculo = placaVehiculo;
+	}
+
+	public String getIdentificacionTransportista() {
+		return identificacionTransportista;
+	}
+
+	public void setIdentificacionTransportista(String identificacionTransportista) {
+		this.identificacionTransportista = identificacionTransportista;
+	}
+
+	public String getRazonSocialTransportista() {
+		return razonSocialTransportista;
+	}
+
+	public void setRazonSocialTransportista(String razonSocialTransportista) {
+		this.razonSocialTransportista = razonSocialTransportista;
 	}
 
 }

@@ -8,8 +8,10 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
 
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonSalir;
 
@@ -36,6 +38,7 @@ public class MenuView extends VerticalLayout implements View{
 		botonComprobanteRetencion=new Button("COMPROBANTE DE RETENCIÓN");
 		botonGuiaRemision=new Button("GUÍA DE REMISIÓN");
 		botonGuiaRemision.setIcon(FontAwesome.CAR);
+		botonGuiaRemision.addClickListener(event->UI.getCurrent().getNavigator().navigateTo("GR"));
 		botonComprobanteRetencion.setIcon(FontAwesome.ARROW_CIRCLE_LEFT);
 		botonComprobanteRetencion.addClickListener(event->{
 			UI.getCurrent().getNavigator().navigateTo("CR");
@@ -50,8 +53,19 @@ public class MenuView extends VerticalLayout implements View{
 			UI.getCurrent().getNavigator().navigateTo("login");
 			VaadinSession.getCurrent().getSession().invalidate();
 		});
-		addComponent(botonSalir);
 		
+		Button botonComprobantes=new Button("comprobantes");
+		botonComprobantes.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+					UI.getCurrent().getNavigator().navigateTo("comprobantes");
+				
+			}
+		});
+		
+		addComponent(botonComprobantes);
+		addComponent(botonSalir);	
 	}
 
 	@Override

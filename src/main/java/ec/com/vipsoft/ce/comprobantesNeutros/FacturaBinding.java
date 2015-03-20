@@ -35,10 +35,10 @@ public class FacturaBinding extends BaseComprobanteElectronicoBinding {
 	private BigDecimal subtotalIva12;
 	@Min(value = 0,message="valor no puede ser negativo")
 	private BigDecimal total;
-        @Pattern(regexp = "[0-9]{3}-[0-9]{3}-[0-9]{9}")
+    @Pattern(regexp = "[0-9]{3}-[0-9]{3}-[0-9]{9}")
 	private String numeroGuiaRemision;
-        private String codigoEstablecimientoDestino;        
-        private String formaPago;
+    private String codigoEstablecimientoDestino;        
+    private String formaPago;
 
     public String getCodigoEstablecimientoDestino() {
         return codigoEstablecimientoDestino;
