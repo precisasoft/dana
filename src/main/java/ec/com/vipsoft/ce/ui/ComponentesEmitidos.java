@@ -1,6 +1,6 @@
 package ec.com.vipsoft.ce.ui;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -10,10 +10,9 @@ import com.vaadin.cdi.CDIView;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Link;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.HtmlRenderer;
 
@@ -44,6 +43,7 @@ public class ComponentesEmitidos extends VerticalLayout implements View{
 		grid.getColumn("claveAcceso").setRenderer(new HtmlRenderer());
 		grid.getColumn("autorizacion").setRenderer(new HtmlRenderer());
 		grid.setSizeFull();
+		grid.setSelectionMode(SelectionMode.NONE);
 		
 		setMargin(true);
 		setSpacing(true);
@@ -54,7 +54,7 @@ public class ComponentesEmitidos extends VerticalLayout implements View{
 	public void actualizarVista(){
 		System.out.println("llamado postconstruct");
 		Long ultimo=0l;
-		List<ComprobanteEmitido> listarSiguientes = listadoComprobantesEmitidos.listarSiguientes(userInfo.getRucEmisor(),userInfo.getMinSearch());
+		Set<ComprobanteEmitido> listarSiguientes = listadoComprobantesEmitidos.listarSiguientes(userInfo.getRucEmisor(),userInfo.getMinSearch());
 		for(ComprobanteEmitido c:listarSiguientes){
 			System.out.println(c.getId());
 			ultimo=c.getId();

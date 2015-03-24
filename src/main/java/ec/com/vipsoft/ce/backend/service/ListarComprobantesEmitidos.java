@@ -1,8 +1,9 @@
 package ec.com.vipsoft.ce.backend.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,15 +18,15 @@ import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 public class ListarComprobantesEmitidos {
 	@PersistenceContext
 	private EntityManager em;
-	public List<ComprobanteEmitido>listarSiguientes(String rucEmisor,Long idMinimo){
-		ArrayList<ComprobanteEmitido>listadoRetorno=new ArrayList<>(100);
+	public Set<ComprobanteEmitido>listarSiguientes(String rucEmisor,Long idMinimo){		
+		TreeSet<ComprobanteEmitido>listadoRetorno=new TreeSet<>();
 		Query qentidad=em.createQuery("select e from Entidad e where e.ruc=?1");
 		qentidad.setParameter(1, rucEmisor);
 		List<Entidad>listadoEntidad=qentidad.getResultList();
 		if(!listadoEntidad.isEmpty()){
 			Entidad entidad=em.getReference(Entidad.class, listadoEntidad.get(0).getId());
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-			Query q=em.createQuery("select c from ComprobanteElectronico c where c.entidadEmisora=?1 and c.id>=?2 order by c.id desc");
+			Query q=em.createQuery("select c from ComprobanteElectronico c where c.entidadEmisora=?1 and c.codigoError is null and c.id>=?2 order by c.id desc");
 			q.setMaxResults(100);
 			//q.setParameter(1, idMinimo);
 			q.setParameter(1, entidad);
@@ -63,8 +64,8 @@ public class ListarComprobantesEmitidos {
 			}	
 		}
 		
-		return listadoRetorno;
-		
+		return listadoRetorno;		
 	}
+
 
 }

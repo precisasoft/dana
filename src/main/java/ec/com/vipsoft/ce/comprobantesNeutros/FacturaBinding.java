@@ -12,6 +12,26 @@ import javax.validation.constraints.Size;
 
 public class FacturaBinding extends BaseComprobanteElectronicoBinding {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8353070093618233442L;
+	private String tipoFactura;
+	private String ordenCompra;
+	private String sucursalCliente;
+	public String getTipoFactura() {
+		if(tipoFactura==null){
+			tipoFactura="regular";
+		}
+		return tipoFactura;
+	}
+
+	public void setTipoFactura(String tipoFactura) {
+		this.tipoFactura = tipoFactura;
+	}
+
+	private String codigoPaisDestino;
+	
 	private boolean debeGenerarGuiaRemision;	
 	@Valid
 	private List<FacturaDetalleBinding>detalles;
@@ -41,7 +61,12 @@ public class FacturaBinding extends BaseComprobanteElectronicoBinding {
     private String formaPago;
 
     public String getCodigoEstablecimientoDestino() {
-        return codigoEstablecimientoDestino;
+    	if(codigoEstablecimientoDestino!=null){
+    		return codigoEstablecimientoDestino.replace("\r", "").replace("\n", "");	
+    	}else{
+    		return null;
+    	}
+        
     }
 
     public void setCodigoEstablecimientoDestino(String codigoEstablecimientoDestino) {
@@ -49,7 +74,12 @@ public class FacturaBinding extends BaseComprobanteElectronicoBinding {
     }
 
     public String getFormaPago() {
-        return formaPago;
+    	if(formaPago!=null){
+    		return formaPago.replace("\r", "").replace("\n", "");	
+    	}else{
+    		return null;
+    	}
+        
     }
 
     public void setFormaPago(String formaPago) {
@@ -58,7 +88,12 @@ public class FacturaBinding extends BaseComprobanteElectronicoBinding {
         
 
     public String getNumeroGuiaRemision() {
-        return numeroGuiaRemision;
+    	if(numeroGuiaRemision!=null){
+    		return numeroGuiaRemision.replace("\r", "").replace("\n", "");	
+    	}else{
+    		return null;
+    	}
+        
     }
 
     public void setNumeroGuiaRemision(String numeroGuiaRemision) {
@@ -76,31 +111,66 @@ public class FacturaBinding extends BaseComprobanteElectronicoBinding {
 		return direccionBeneficiario.replace("\r", "").replace("\n", "");
 	}
 	public String getGuiaRemision() {
-		return guiaRemision.replace("\r", "").replace("\n", "");
+		if(guiaRemision!=null){
+			return guiaRemision.replace("\r", "").replace("\n", "");	
+		}else{
+			return null;
+		}
+		
 	}
 	public String getIdTransportista() {
-		return idTransportista.replace("\r", "").replace("\n", "");
+		if(idTransportista!=null){
+			return idTransportista.replace("\r", "").replace("\n", "");	
+		}else{
+			return null;
+		}
+		
 	}
 	public String getPlaca() {
-		return placa.replace("\r", "").replace("\n", "");
+		if(placa!=null){
+			return placa.replace("\r", "").replace("\n", "");	
+		}else{
+			return null;
+		}
+		
 	}
 	public String getRazonSocialTransportista() {
-		return razonSocialTransportista.replace("\r", "").replace("\n", "");
+		if(razonSocialTransportista!=null){
+			return razonSocialTransportista.replace("\r", "").replace("\n", "");	
+		}else{
+			return null;
+		}
+		
 	}
 	public BigDecimal getSubtotalDescuento() {
-		return subtotalDescuento;
+		if(subtotalDescuento==null){
+			subtotalDescuento=new BigDecimal("0.00");
+		}
+		return subtotalDescuento.setScale(2, RoundingMode.HALF_UP);
 	}
 	public BigDecimal getSubtotalIce() {
-		return subtotalIce;
+		if(subtotalIce==null){
+			subtotalIce=new BigDecimal("0.00");
+		}
+		return subtotalIce.setScale(2, RoundingMode.HALF_UP);
 	}
 	public BigDecimal getSubtotalIva0() {
-		return subtotalIva0;
+		if(subtotalIva0==null){
+			subtotalIva0=new BigDecimal("0.00");
+		}
+		return subtotalIva0.setScale(2, RoundingMode.HALF_UP);
 	}
 	public BigDecimal getSubtotalIva12() {
-		return subtotalIva12;
+		if(subtotalIva12==null){
+			subtotalIva12=new BigDecimal("0.00");
+		}
+		return subtotalIva12.setScale(2, RoundingMode.HALF_UP);
 	}
 	public BigDecimal getTotal() {
-		return total;
+		if(total==null){
+			total=new BigDecimal("0.00");
+		}
+		return total.setScale(2, RoundingMode.HALF_UP);
 	}
 	public boolean isDebeGenerarGuiaRemision() {
 		return debeGenerarGuiaRemision;
@@ -143,10 +213,34 @@ public class FacturaBinding extends BaseComprobanteElectronicoBinding {
 	}	
 
     public BigDecimal calculaDescuento() {
-        BigDecimal totalDescuento=BigDecimal.ZERO;
+        BigDecimal totalDescuento=new BigDecimal("0.00");
         for(FacturaDetalleBinding detalle:detalles){
             totalDescuento=totalDescuento.add(detalle.getDescuento());
         }
         return totalDescuento.setScale(2,RoundingMode.HALF_UP);
     }
+
+	public String getCodigoPaisDestino() {
+		return codigoPaisDestino;
+	}
+
+	public void setCodigoPaisDestino(String codigoPaisDestino) {
+		this.codigoPaisDestino = codigoPaisDestino;
+	}
+
+	public String getOrdenCompra() {
+		return ordenCompra;
+	}
+
+	public void setOrdenCompra(String ordenCompra) {
+		this.ordenCompra = ordenCompra;
+	}
+
+	public String getSucursalCliente() {
+		return sucursalCliente;
+	}
+
+	public void setSucursalCliente(String sucursalCliente) {
+		this.sucursalCliente = sucursalCliente;
+	}
 }

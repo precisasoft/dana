@@ -73,6 +73,7 @@ public class MyContextListener extends org.apache.shiro.web.env.EnvironmentLoade
 			contenedorRide.setRideFactura(jasperFactura);
 			contenedorRide.setRideFacturaSinLogo(jasperFacturasinLogo);
 			contenedorRide.setRideRetencion(jasperretencion);
+			contenedorRide.setRideRetencionSinLogo(jasperretencionnologo);
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -2,7 +2,7 @@ package ec.com.vipsoft.ce.ui;
 
 import java.io.Serializable;
 
-public class ComprobanteEmitido implements Serializable {
+public class ComprobanteEmitido implements Serializable,Comparable<ComprobanteEmitido> {
 	
 	/**
 	 * 
@@ -56,6 +56,20 @@ public class ComprobanteEmitido implements Serializable {
 	}
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+	@Override
+	public int compareTo(ComprobanteEmitido o) {
+		int retorno=tipo.compareTo(o.tipo);
+		if(retorno==0){
+			retorno=numeroDocumento.compareTo(o.numeroDocumento);
+			if(retorno<1){
+				retorno=1;
+			}
+			if(retorno>1){
+				retorno=-1;
+			}			
+		}
+		return retorno;
 	}
 	
 }

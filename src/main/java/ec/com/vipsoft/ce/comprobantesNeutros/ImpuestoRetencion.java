@@ -105,7 +105,7 @@ public class ImpuestoRetencion implements Comparable<ImpuestoRetencion>,Serializ
 		}
 	}
 	public void actualizarValorRetenido() {
-		valorRetenido=baseImponible.multiply(porcentajeRetencion).divide(new BigDecimal("100"),RoundingMode.HALF_UP);
+		valorRetenido=baseImponible.multiply(porcentajeRetencion).divide(new BigDecimal("100"),2,RoundingMode.HALF_UP);
 		
 	}
 	@Override

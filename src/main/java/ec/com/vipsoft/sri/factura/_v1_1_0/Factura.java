@@ -9,8 +9,10 @@
 package ec.com.vipsoft.sri.factura._v1_1_0;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -278,6 +280,9 @@ public class Factura {
      *     
      */
     public InfoTributaria getInfoTributaria() {
+    	if(infoTributaria==null){
+    		infoTributaria=new InfoTributaria();
+    	}
         return infoTributaria;
     }
 
@@ -302,6 +307,9 @@ public class Factura {
      *     
      */
     public Factura.InfoFactura getInfoFactura() {
+    	if(infoFactura==null){
+    		infoFactura=new InfoFactura();
+    	}
         return infoFactura;
     }
 
@@ -326,6 +334,9 @@ public class Factura {
      *     
      */
     public Factura.Detalles getDetalles() {
+    	if(detalles==null){
+    		detalles=new Factura.Detalles();
+    	}
         return detalles;
     }
 
@@ -350,6 +361,10 @@ public class Factura {
      *     
      */
     public Reembolsos getReembolsos() {
+    	if(reembolsos==null){
+    		reembolsos=new Reembolsos();
+    	}
+    	
         return reembolsos;
     }
 
@@ -374,6 +389,9 @@ public class Factura {
      *     
      */
     public Factura.Retenciones getRetenciones() {
+    	if(retenciones==null){
+    		retenciones=new Factura.Retenciones();
+    	}
         return retenciones;
     }
 
@@ -398,6 +416,9 @@ public class Factura {
      *     
      */
     public Factura.InfoAdicional getInfoAdicional() {
+    	if(infoAdicional==null){
+    		infoAdicional=new Factura.InfoAdicional();
+    	}
         return infoAdicional;
     }
 
@@ -818,6 +839,9 @@ public class Factura {
              *     
              */
             public BigDecimal getCantidad() {
+            	if(cantidad==null){
+            		cantidad=new BigDecimal("0.00");
+            	}
                 return cantidad;
             }
 
@@ -842,6 +866,9 @@ public class Factura {
              *     
              */
             public BigDecimal getPrecioUnitario() {
+            	if(precioUnitario==null){
+            		precioUnitario=new BigDecimal("0.00");
+            	}
                 return precioUnitario;
             }
 
@@ -866,6 +893,9 @@ public class Factura {
              *     
              */
             public BigDecimal getDescuento() {
+            	if(descuento==null){
+            		descuento=new BigDecimal("0.00");
+            	}
                 return descuento;
             }
 
@@ -890,6 +920,9 @@ public class Factura {
              *     
              */
             public BigDecimal getPrecioTotalSinImpuesto() {
+            	if (precioTotalSinImpuesto==null){
+            		precioTotalSinImpuesto=new BigDecimal("0.00");
+            	}
                 return precioTotalSinImpuesto;
             }
 
@@ -914,6 +947,9 @@ public class Factura {
              *     
              */
             public Factura.Detalles.Detalle.DetallesAdicionales getDetallesAdicionales() {
+            	if(detallesAdicionales==null){
+            		detallesAdicionales=new DetallesAdicionales();
+            	}
                 return detallesAdicionales;
             }
 
@@ -938,6 +974,9 @@ public class Factura {
              *     
              */
             public Factura.Detalles.Detalle.Impuestos getImpuestos() {
+            	if(impuestos==null){
+            		impuestos=new Impuestos();
+            	}
                 return impuestos;
             }
 
@@ -1926,7 +1965,10 @@ public class Factura {
          *     
          */
         public BigDecimal getTotalSinImpuestos() {
-            return totalSinImpuestos;
+        	if(totalSinImpuestos==null){
+        		totalSinImpuestos=new BigDecimal("0.00");
+        	}
+            return totalSinImpuestos.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -1974,7 +2016,10 @@ public class Factura {
          *     
          */
         public BigDecimal getTotalDescuento() {
-            return totalDescuento;
+        	if(totalDescuento==null){
+        		totalDescuento=new BigDecimal("0.00");
+        	}
+            return totalDescuento.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2022,7 +2067,10 @@ public class Factura {
          *     
          */
         public BigDecimal getTotalComprobantesReembolso() {
-            return totalComprobantesReembolso;
+        	if(totalComprobantesReembolso==null){
+        		totalComprobantesReembolso=new BigDecimal("0.00");
+        	}
+            return totalComprobantesReembolso.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2046,7 +2094,10 @@ public class Factura {
          *     
          */
         public BigDecimal getTotalBaseImponibleReembolso() {
-            return totalBaseImponibleReembolso;
+        	if(totalBaseImponibleReembolso==null){
+        		totalBaseImponibleReembolso=new BigDecimal("0.00");
+        	}
+            return totalBaseImponibleReembolso.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2070,7 +2121,10 @@ public class Factura {
          *     
          */
         public BigDecimal getTotalImpuestoReembolso() {
-            return totalImpuestoReembolso;
+        	if(totalImpuestoReembolso==null){
+        		totalImpuestoReembolso=new BigDecimal("0.00");
+        	}
+            return totalImpuestoReembolso.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2094,6 +2148,9 @@ public class Factura {
          *     
          */
         public Factura.InfoFactura.TotalConImpuestos getTotalConImpuestos() {
+        	if(totalConImpuestos==null){
+        		totalConImpuestos=new TotalConImpuestos();
+        	}
             return totalConImpuestos;
         }
 
@@ -2118,7 +2175,10 @@ public class Factura {
          *     
          */
         public BigDecimal getPropina() {
-            return propina;
+        	if(propina==null){
+        		propina=new BigDecimal("0.00");
+        	}
+            return propina.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2142,7 +2202,10 @@ public class Factura {
          *     
          */
         public BigDecimal getFleteInternacional() {
-            return fleteInternacional;
+        	if(fleteInternacional==null){
+        		fleteInternacional=new BigDecimal("0.00");
+        	}
+            return fleteInternacional.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2166,7 +2229,10 @@ public class Factura {
          *     
          */
         public BigDecimal getSeguroInternacional() {
-            return seguroInternacional;
+        	if(seguroInternacional==null){
+        		seguroInternacional=new BigDecimal("0.00");
+        	}
+            return seguroInternacional.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2190,7 +2256,10 @@ public class Factura {
          *     
          */
         public BigDecimal getGastosAduaneros() {
-            return gastosAduaneros;
+        	if(gastosAduaneros==null){
+        		gastosAduaneros=new BigDecimal("0.00");
+        	}
+            return gastosAduaneros.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2214,7 +2283,10 @@ public class Factura {
          *     
          */
         public BigDecimal getGastosTransporteOtros() {
-            return gastosTransporteOtros;
+        	if(gastosTransporteOtros==null){
+        		gastosTransporteOtros=new BigDecimal("0.00");
+        	}
+            return gastosTransporteOtros.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2238,7 +2310,10 @@ public class Factura {
          *     
          */
         public BigDecimal getImporteTotal() {
-            return importeTotal;
+        	if(importeTotal==null){
+        		importeTotal=new BigDecimal("0.00");
+        	}
+            return importeTotal.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2262,6 +2337,10 @@ public class Factura {
          *     
          */
         public String getMoneda() {
+        	if(moneda==null)        
+        	{
+        		moneda="DOLLAR";
+        	}
             return moneda;
         }
 
@@ -2286,6 +2365,7 @@ public class Factura {
          *     
          */
         public Pagos getPagos() {
+        	
             return pagos;
         }
 
@@ -2310,7 +2390,10 @@ public class Factura {
          *     
          */
         public BigDecimal getValorRetIva() {
-            return valorRetIva;
+        	if(valorRetIva==null){
+        		valorRetIva=new BigDecimal("0.00");
+        	}
+            return valorRetIva.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2334,7 +2417,10 @@ public class Factura {
          *     
          */
         public BigDecimal getValorRetRenta() {
-            return valorRetRenta;
+        	if(valorRetRenta==null){
+        		valorRetRenta=new BigDecimal("0.00");
+        	}
+            return valorRetRenta.setScale(2,RoundingMode.HALF_UP);
         }
 
         /**
@@ -2530,7 +2616,10 @@ public class Factura {
                  *     
                  */
                 public BigDecimal getDescuentoAdicional() {
-                    return descuentoAdicional;
+                	if(descuentoAdicional==null){
+                		descuentoAdicional=new BigDecimal("0.00");
+                	}
+                    return descuentoAdicional.setScale(2,RoundingMode.HALF_UP);
                 }
 
                 /**
@@ -2554,7 +2643,10 @@ public class Factura {
                  *     
                  */
                 public BigDecimal getBaseImponible() {
-                    return baseImponible;
+                	if(baseImponible==null){
+                		baseImponible=new BigDecimal("0.00");
+                	}
+                    return baseImponible.setScale(2,RoundingMode.HALF_UP);
                 }
 
                 /**
@@ -2578,7 +2670,10 @@ public class Factura {
                  *     
                  */
                 public BigDecimal getTarifa() {
-                    return tarifa;
+                	if(tarifa==null){
+                		tarifa=new BigDecimal("0.00");
+                	}
+                    return tarifa.setScale(2,RoundingMode.HALF_UP);
                 }
 
                 /**
@@ -2602,7 +2697,10 @@ public class Factura {
                  *     
                  */
                 public BigDecimal getValor() {
-                    return valor;
+                	if(valor==null){
+                		valor=new BigDecimal("0.00");
+                	}
+                    return valor.setScale(2,RoundingMode.HALF_UP);
                 }
 
                 /**
@@ -2626,7 +2724,10 @@ public class Factura {
                  *     
                  */
                 public BigDecimal getValorDevolucionIva() {
-                    return valorDevolucionIva;
+                	if(valorDevolucionIva==null){
+                		valorDevolucionIva=new BigDecimal("0.00");
+                	}
+                    return valorDevolucionIva.setScale(2,RoundingMode.HALF_UP);
                 }
 
                 /**
@@ -2816,7 +2917,10 @@ public class Factura {
              *     
              */
             public BigDecimal getTarifa() {
-                return tarifa;
+            	if(tarifa==null){
+            		tarifa=new BigDecimal("0.00");
+            	}
+                return tarifa.setScale(2,RoundingMode.HALF_UP);
             }
 
             /**
@@ -2840,7 +2944,10 @@ public class Factura {
              *     
              */
             public BigDecimal getValor() {
-                return valor;
+            	if(valor==null){
+            		valor=new BigDecimal("0.00");
+            	}
+                return valor.setScale(2,RoundingMode.HALF_UP);
             }
 
             /**

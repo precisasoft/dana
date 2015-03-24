@@ -7,20 +7,16 @@ package ec.com.vipsoft.ce.services.recepcionComprobantesNeutros;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -33,10 +29,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -48,13 +42,13 @@ import org.w3c.dom.Document;
 
 import ec.com.vipsoft.ce.backend.service.GeneradorClaveAccesoPorEntidad;
 import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionBinding;
-import ec.com.vipsoft.ce.comprobantesNeutros.ComprobanteRetencionDetalleBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.ImpuestoRetencion;
 import ec.com.vipsoft.ce.utils.LlenadorNumeroComprobante;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
+import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion.InfoAdicional.CampoAdicional;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.Impuesto;
 import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ObligadoContabilidad;
 import es.mityc.firmaJava.libreria.xades.DataToSign;
@@ -93,11 +87,11 @@ public class ReceptorComprobanteRetencionNeutra {
 		//continuar porque se ha validado inicialmente
 		String rucEmisor = retencion.getRucEmisor();
 		String puntoEmision = retencion.getCodigoPuntoVenta();
-		String establecimiento = retencion.getCodigoEstablecimiento();
-		
+		String establecimiento = retencion.getCodigoEstablecimiento();		
 		Query q = em.createQuery("select e from Entidad e where e.ruc=?1 and e.habilitado=?2");
 		q.setParameter(1, rucEmisor);
 		q.setParameter(2, Boolean.TRUE);
+		@SuppressWarnings("unchecked")
 		List<Entidad> lista = q.getResultList();
 		if (!lista.isEmpty()) {
 			
@@ -131,6 +125,7 @@ public class ReceptorComprobanteRetencionNeutra {
 			comprobanteRetencion.getInfoCompRetencion().setTipoIdentificacionSujetoRetenido(retencion.getCodigoTipoIdentificacionBeneficiario());
 			// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////7
 			// ////////////////////////////7
+			BigDecimal totalRetenido=new BigDecimal("0.00");
 			for (ImpuestoRetencion d : retencion.getImpuestos()) {
 				Impuesto impuesto = new Impuesto();
 				impuesto.setBaseImponible(d.getBaseImponible());
@@ -159,11 +154,19 @@ public class ReceptorComprobanteRetencionNeutra {
 					correcto=false;
 					motivoRechazo="el monto retenido no puede ser <=0";
 				}
+				totalRetenido=totalRetenido.add(impuesto.getValorRetenido());
 				comprobanteRetencion.getImpuestos().getImpuesto().add(impuesto);
 			}
 			
 			if(correcto){
-				String claveAcceso = generadorClaveAcceso.generarClaveAccesoComprobanteRetencion(retencion.getRucEmisor(),retencion.getCodigoEstablecimiento(),	retencion.getCodigoPuntoVenta());
+				
+				
+				String claveAcceso=null;
+				if(retencion.getSecuenciaDocumento()!=null){
+					claveAcceso=generadorClaveAcceso.generarClaveAccesoComprobanteRetencion(retencion.getRucEmisor(),retencion.getCodigoEstablecimiento(),	retencion.getCodigoPuntoVenta(),retencion.getSecuenciaDocumento());
+				}else{
+					claveAcceso = generadorClaveAcceso.generarClaveAccesoComprobanteRetencion(retencion.getRucEmisor(),retencion.getCodigoEstablecimiento(),	retencion.getCodigoPuntoVenta());	
+				}
 				String secuenciaDocumento = utilClaveAccesl.obtenerSecuanciaDocumento(claveAcceso);
 				String ambiente = utilClaveAccesl.obtenerAmbiente(claveAcceso);
 				String codigoDocumento = utilClaveAccesl.obtenerTipoDocumento(claveAcceso);
@@ -177,6 +180,10 @@ public class ReceptorComprobanteRetencionNeutra {
 				} else {
 					comprobanteRetencion.getInfoTributaria().setTipoEmision("1");
 				}
+				CampoAdicional catotalRetenido=new CampoAdicional();
+				catotalRetenido.setNombre("Total Retenido");
+				catotalRetenido.setValue("$"+totalRetenido);
+				comprobanteRetencion.getInfoAdicional().getCampoAdicional().add(catotalRetenido);
 				// aqui se debería probar la validez			
 				/////////////////////////////////////////////////////////////////////////////////////////////////////7
 
@@ -231,8 +238,8 @@ public class ReceptorComprobanteRetencionNeutra {
 					DOMSource domSource = new DOMSource(documentoFirmado);
 					StringWriter writer = new StringWriter();
 					StreamResult result2 = new StreamResult(writer);
-					TransformerFactory tf = TransformerFactory.newInstance();
-					Transformer transformer2 = tf.newTransformer();
+				//	TransformerFactory tf = TransformerFactory.newInstance();
+				//	Transformer transformer2 = tf.newTransformer();
 					transformer.transform(domSource, result2);
 					sbFacturaFirmadaEnTexto.append(writer.toString());
 
