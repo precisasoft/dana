@@ -13,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -27,10 +25,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -38,25 +34,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.w3c.dom.Document;
 
 import ec.com.vipsoft.ce.backend.service.GeneradorClaveAccesoPorEntidad;
 import ec.com.vipsoft.ce.comprobantesNeutros.FacturaBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.FacturaDetalleBinding;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
-import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
-import ec.com.vipsoft.erp.abinadi.dominio.DocumentoFirmado;
-import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
-import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
+import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura;
-import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle.DetallesAdicionales;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle.DetallesAdicionales.DetAdicional;
-import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle.Impuestos;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura.InfoAdicional.CampoAdicional;
 import ec.com.vipsoft.sri.factura._v1_1_0.Impuesto;
 import ec.com.vipsoft.sri.factura._v1_1_0.ObligadoContabilidad;
@@ -156,7 +143,7 @@ public class ReceptorFacturaNeutra {
 			} else {
 				facturaxml.getInfoTributaria().setTipoEmision("1");
 			}
-			
+
 			facturaxml.getInfoFactura().setPropina(new BigDecimal("0.00"));
 			facturaxml.getInfoFactura().setDireccionComprador(factura.getDireccionBeneficiario());
 			facturaxml.getInfoFactura().setDirEstablecimiento(entidad.getDireccionMatriz());
@@ -170,6 +157,7 @@ public class ReceptorFacturaNeutra {
 			facturaxml.getInfoFactura().setMoneda("DOLAR");
 			facturaxml.getInfoFactura().setTotalSinImpuestos(factura.getSubtotalIva0());
 			facturaxml.getInfoFactura().setTotalDescuento(factura.calculaDescuento());	
+
 			BigDecimal totalDescuento=new BigDecimal("0.00");
 			BigDecimal totalIva12=new BigDecimal("0.00");
 			BigDecimal totalIva0=new BigDecimal("0.00");
@@ -178,84 +166,93 @@ public class ReceptorFacturaNeutra {
 			BigDecimal baseNoSujeto=new BigDecimal("0.00");
 			BigDecimal baseICE=new BigDecimal("0.00");
 			BigDecimal baseIva12=new BigDecimal("0.00");
-			
+
 			BigDecimal sumatoria=new BigDecimal("0.00");
 			BigDecimal sumaSinImpuesto=new BigDecimal("0.00");
-			for(FacturaDetalleBinding d:factura.getDetalles()){
-				Factura.Detalles.Detalle detalle=new Factura.Detalles.Detalle();
-				detalle.setCantidad(d.getCantidad().setScale(4, RoundingMode.HALF_UP));
-				//detalle.setCodigoPrincipal(d.getCodigoICE());
-			//	detalle.setCodigoAuxiliar(d.getCodigoInterno());
-				detalle.setCodigoPrincipal(aliniarString(d.getCodigo(),25));			
-				detalle.setDescripcion(aliniarString(d.getDescripcion(),300));
+
+			for (FacturaDetalleBinding d : factura.getDetalles()) {
+				Factura.Detalles.Detalle detalle = new Factura.Detalles.Detalle();
+				detalle.setCantidad(d.getCantidad().setScale(4,	RoundingMode.HALF_UP));
+				// detalle.setCodigoPrincipal(d.getCodigoICE());
+				// detalle.setCodigoAuxiliar(d.getCodigoInterno());
+				detalle.setCodigoPrincipal(aliniarString(d.getCodigo(), 25));
+				detalle.setDescripcion(aliniarString(d.getDescripcion(), 300));
 				detalle.setPrecioUnitario(d.getValorUnitario());
 				detalle.setPrecioTotalSinImpuesto(d.getValorTotal());
-				totalDescuento=totalDescuento.add(d.getDescuento());
-				sumaSinImpuesto=sumaSinImpuesto.add(d.calculaBaeImponible());
-				sumatoria=sumatoria.add(d.getValorTotal());
-				if(d.getInfoAdicional1()!=null){					
-					DetAdicional dead=new DetAdicional();
-					dead.setNombre("info");
-					dead.setValor(aliniarString(d.getInfoAdicional1(),300));
-					if(d.getInfoAdicional1().length()>0){						
-						detalle.getDetallesAdicionales().getDetAdicional().add(dead);	
-					}
-					
-					//detalle.setDetallesAdicionales(dadicionales);
-				}
-				
-				if(d.getDescuento().doubleValue()!=0d){
-					detalle.setDescuento(d.getDescuento());	
-				}else{
+				if (d.getDescuento().doubleValue() > 0d) {
+					detalle.setDescuento(d.getDescuento());
+				} else {
 					detalle.setDescuento(new BigDecimal("0.00"));
 				}
-				
-				
-			    if(!d.getCodigoIVA().isEmpty()){
-			    		Impuesto impuesto=new Impuesto();
-			    	
-			    		impuesto.setBaseImponible(d.calculaBaeImponible());
-			    		impuesto.setCodigo("2");
-			    		
-			    		impuesto.setCodigoPorcentaje(d.getCodigoIVA().trim());
-			    		if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("2"))
-			    		{
-			    			impuesto.setTarifa(new BigDecimal("12"));
-			    			impuesto.setValor(d.getIva12().setScale(2, RoundingMode.HALF_UP));
-			    			baseIva12=baseIva12.add(impuesto.getBaseImponible());
-			    		}
-			    		if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("0"))
-			    		{
-			    			impuesto.setTarifa(new BigDecimal("0.00"));
-			    			impuesto.setValor(new BigDecimal("0.00"));
-			    			baseIva0=baseIva0.add(impuesto.getBaseImponible());
-			    		}
-			    		if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("6"))
-			    		{
-			    			impuesto.setTarifa(new BigDecimal("0.00"));
-			    			impuesto.setValor(new BigDecimal("0.00"));
-			    			baseNoSujeto=baseNoSujeto.add(impuesto.getBaseImponible());
-			    		}
-			    		if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("7"))
-			    		{
-			    			impuesto.setTarifa(new BigDecimal("0.00"));
-			    			impuesto.setValor(new BigDecimal("0.00"));
-			    			baseExepto=baseExepto.add(impuesto.getBaseImponible());
-			    		}
-			    		detalle.getImpuestos().getImpuesto().add(impuesto);			    				    		
-			    		totalIva12=totalIva12.add(impuesto.getValor());
-			    		//detalle.getImpuestos().getImpuesto().add(e)
-			    }
-			    facturaxml.getDetalles().getDetalle().add(detalle);				 
+				totalDescuento = totalDescuento.add(d.getDescuento());
+				sumaSinImpuesto = sumaSinImpuesto.add(d.calculaBaeImponible());
+				sumatoria = sumatoria.add(d.getValorTotal());
+				if (d.getInfoAdicional1() != null) {
+					DetAdicional dead = new DetAdicional();
+					dead.setNombre("info");
+					dead.setValor(aliniarString(d.getInfoAdicional1(), 300));
+					if (d.getInfoAdicional1().length() > 0) {
+						detalle.getDetallesAdicionales().getDetAdicional()
+								.add(dead);
+					}
+
+					// detalle.setDetallesAdicionales(dadicionales);
+				}
+
+
+
+
+				if(!d.getCodigoIVA().isEmpty()){			    			    
+					Impuesto impuesto=new Impuesto();			    				    
+					impuesto.setBaseImponible(d.calculaBaeImponible());			    	
+					impuesto.setCodigo("2");			    					    	
+					impuesto.setCodigoPorcentaje(d.getCodigoIVA().trim());	
+					if(factura.getTipoFactura().equalsIgnoreCase("regular")){
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("2")){			    	
+							impuesto.setTarifa(new BigDecimal("12"));			    		
+							impuesto.setValor(d.getIva12().setScale(2, RoundingMode.HALF_UP));			    		
+							baseIva12=baseIva12.add(impuesto.getBaseImponible());
+							totalIva12=totalIva12.add(impuesto.getValor());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("0")){			    	
+							impuesto.setTarifa(new BigDecimal("0.00"));			    	
+							impuesto.setValor(new BigDecimal("0.00"));			    		
+							baseIva0=baseIva0.add(impuesto.getBaseImponible());			    		
+						}			    		
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("6")){			    	
+							impuesto.setTarifa(new BigDecimal("0.00"));
+							impuesto.setValor(new BigDecimal("0.00"));			    			
+							baseNoSujeto=baseNoSujeto.add(impuesto.getBaseImponible());			    
+						}
+
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("7")){
+							impuesto.setTarifa(new BigDecimal("0.00"));
+							impuesto.setValor(new BigDecimal("0.00"));
+							baseExepto=baseExepto.add(impuesto.getBaseImponible());
+						}
+
+						
+					}else{
+						impuesto.setCodigoPorcentaje("0");					
+						impuesto.setBaseImponible(d.calculaBaeImponible());
+						impuesto.setCodigoPorcentaje("0");						
+						impuesto.setTarifa(new BigDecimal("0.00"));			    							
+						impuesto.setValor(new BigDecimal("0.00"));			    							
+						baseIva0=baseIva0.add(impuesto.getBaseImponible());	
+					}
+					detalle.getImpuestos().getImpuesto().add(impuesto);
+				}
+
+				facturaxml.getDetalles().getDetalle().add(detalle);		
 			}
 			if(baseIva0.doubleValue()>0){
-				Factura.InfoFactura.TotalConImpuestos.TotalImpuesto iva12=new Factura.InfoFactura.TotalConImpuestos.TotalImpuesto();
-				iva12.setBaseImponible(baseIva0);
-				iva12.setCodigo("2");
-				iva12.setCodigoPorcentaje("0");
-				iva12.setTarifa(new BigDecimal("0.00"));
-				iva12.setValor(new BigDecimal("0.00"));
-				facturaxml.getInfoFactura().getTotalConImpuestos().getTotalImpuesto().add(iva12);
+				Factura.InfoFactura.TotalConImpuestos.TotalImpuesto iva0=new Factura.InfoFactura.TotalConImpuestos.TotalImpuesto();
+				iva0.setBaseImponible(baseIva0);
+				iva0.setCodigo("2");
+				iva0.setCodigoPorcentaje("0");
+				iva0.setTarifa(new BigDecimal("0.00"));
+				iva0.setValor(new BigDecimal("0.00"));
+				facturaxml.getInfoFactura().getTotalConImpuestos().getTotalImpuesto().add(iva0);
 			}
 			if(baseIva12.doubleValue()>0){
 				Factura.InfoFactura.TotalConImpuestos.TotalImpuesto iva12=new Factura.InfoFactura.TotalConImpuestos.TotalImpuesto();
@@ -283,19 +280,19 @@ public class ReceptorFacturaNeutra {
 				nosujetoAImpuesto.setBaseImponible(baseNoSujeto);
 				facturaxml.getInfoFactura().getTotalConImpuestos().getTotalImpuesto().add(nosujetoAImpuesto);
 			}
-			
+
 			facturaxml.getInfoFactura().setImporteTotal(sumatoria);
 			facturaxml.getInfoFactura().setTotalSinImpuestos(sumaSinImpuesto);
 			facturaxml.getInfoFactura().setFechaEmision(sdf2.format(factura.getFechaEmision()));
-			
+
 			CampoAdicional direccion=new CampoAdicional();
 			direccion.setNombre("DIRECCION");
 			direccion.setValue(aliniarString(factura.getDireccionBeneficiario(),300));
 			if(direccion.getValue().length()>0){
 				facturaxml.getInfoAdicional().getCampoAdicional().add(direccion);	
 			}
-			
-			
+
+
 			if(factura.getOrdenCompra()!=null){
 				CampoAdicional campoordencompra=new CampoAdicional();
 				campoordencompra.setNombre("OC");
@@ -303,7 +300,7 @@ public class ReceptorFacturaNeutra {
 				if(campoordencompra.getValue().length()>0){
 					facturaxml.getInfoAdicional().getCampoAdicional().add(campoordencompra);	
 				}
-				
+
 			}
 			if((factura.getFormaPago()!=null)){
 				CampoAdicional campopago=new CampoAdicional();
@@ -312,14 +309,30 @@ public class ReceptorFacturaNeutra {
 				if(campopago.getValue().length()>0){
 					facturaxml.getInfoAdicional().getCampoAdicional().add(campopago);	
 				}
-				
-			}
-			
 
-			
+			}
+
+
+
 			facturaxml.getInfoFactura().setImporteTotal(sumatoria);
 			facturaxml.getInfoFactura().setTotalDescuento(totalDescuento);		
 			facturaxml.getInfoFactura().setPropina(new BigDecimal("0.00"));
+			if(factura.getTipoFactura().equalsIgnoreCase("exportacion")){
+				facturaxml.getInfoFactura().setComercioExterior("EXPORTADOR");
+				facturaxml.getInfoFactura().setIncoTermFactura("EXW");
+				facturaxml.getInfoFactura().setLugarIncoTerm("GUAYAQUIL");
+				facturaxml.getInfoFactura().setPaisOrigen("593");
+				facturaxml.getInfoFactura().setPuertoEmbarque("GUAYAQUIL");
+				facturaxml.getInfoFactura().setPuertoDestino(consultaPais(factura.getCodigoPaisDestino()));
+				facturaxml.getInfoFactura().setPaisDestino(factura.getCodigoPaisDestino());
+				facturaxml.getInfoFactura().setPaisAdquisicion(factura.getCodigoPaisDestino());
+				facturaxml.getInfoFactura().setFleteInternacional(new BigDecimal("0.00"));
+				facturaxml.getInfoFactura().setSeguroInternacional(new BigDecimal("0.00"));
+				facturaxml.getInfoFactura().setGastosAduaneros(new BigDecimal("0.00"));
+				facturaxml.getInfoFactura().setGastosTransporteOtros(new BigDecimal("0.00"));
+				facturaxml.getInfoFactura().setGastosTransporteOtros(new BigDecimal("0.00"));
+			}
+			
 
 			try {
 				Document convertidoEnDOM = DocumentBuilderFactory.newInstance()	.newDocumentBuilder().newDocument();
@@ -370,8 +383,8 @@ public class ReceptorFacturaNeutra {
 				DOMSource domSource = new DOMSource(documentoFirmado);
 				StringWriter writer = new StringWriter();
 				StreamResult result2 = new StreamResult(writer);
-			//	TransformerFactory tf = TransformerFactory.newInstance();
-			//	Transformer transformer2 = tf.newTransformer();
+				//	TransformerFactory tf = TransformerFactory.newInstance();
+				//	Transformer transformer2 = tf.newTransformer();
 				transformer.transform(domSource, result2);
 				sbFacturaFirmadaEnTexto.append(writer.toString());
 
@@ -389,7 +402,7 @@ public class ReceptorFacturaNeutra {
 				parametros.put("idCliente", facturaxml.getInfoFactura().getIdentificacionComprador());
 				parametros.put("tipoComprobante", TipoComprobante.factura);
 				procesoEnvio.lanzarProcesoEnvio(parametros);
-				
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -406,14 +419,22 @@ public class ReceptorFacturaNeutra {
 		dataToSign.setEnveloped(true);
 		return dataToSign;
 	}
-	  public String aliniarString(String texto,int longitudmax){
-		   String reeemplazdo=texto.replaceAll("\r","");
-		   String reemplazo2=reeemplazdo.replaceAll("\n", "");
-		   if(reemplazo2.length()>longitudmax){
-			   return reemplazo2.substring(0,longitudmax);
-		   }
-		   else{
-			   return reemplazo2;
-		   }
-	   }
+	public String aliniarString(String texto,int longitudmax){
+		String reeemplazdo=texto.replaceAll("\r","");
+		String reemplazo2=reeemplazdo.replaceAll("\n", "");
+		if(reemplazo2.length()>longitudmax){
+			return reemplazo2.substring(0,longitudmax);
+		}
+		else{
+			return reemplazo2;
+		}
+	}
+	private String consultaPais(String codigoPais){
+		Map<String,String>mapaPaises=new HashMap<String, String>();
+		mapaPaises.put("108", "CHILE");
+		mapaPaises.put("105","COLOMBIA");
+		mapaPaises.put("101","ARGENTINA");
+		mapaPaises.put("110","ESTADOS UNIDOS");
+		return mapaPaises.get(codigoPais);
+	}
 }

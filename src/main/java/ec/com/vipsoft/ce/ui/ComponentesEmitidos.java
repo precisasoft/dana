@@ -11,13 +11,17 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.HtmlRenderer;
 
 import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
 import ec.com.vipsoft.ce.backend.service.ListarComprobantesEmitidos;
+import ec.com.vipsoft.erp.gui.componentesbasicos.BotonCancelar;
 
 @CDIView("comprobantes")
 public class ComponentesEmitidos extends VerticalLayout implements View{
@@ -29,6 +33,7 @@ public class ComponentesEmitidos extends VerticalLayout implements View{
 	private static final long serialVersionUID = 5820107472515714341L;
 	private Grid grid;
 	private BeanItemContainer<ComprobanteRideXmlBean>beanItemContainer;
+	private BotonCancelar botonCancelar;
 	@Override
 	public void enter(ViewChangeEvent event) {
 	//	actualizarVista();
@@ -48,7 +53,19 @@ public class ComponentesEmitidos extends VerticalLayout implements View{
 		setMargin(true);
 		setSpacing(true);
 		setSizeFull();
+		HorizontalLayout l1=new HorizontalLayout();
+		botonCancelar=new BotonCancelar();
+		botonCancelar.addClickListener(event->{
+			UI.getCurrent().getNavigator().navigateTo("menu");
+			
+		});
+		l1.addComponent(botonCancelar);
+		l1.setComponentAlignment(botonCancelar, Alignment.TOP_RIGHT);
+		addComponent(l1);
 		addComponent(grid);
+		setComponentAlignment(l1, Alignment.TOP_RIGHT);
+		setExpandRatio(l1, 1);
+		setExpandRatio(grid, 9);
 	}
 	@PostConstruct
 	public void actualizarVista(){
