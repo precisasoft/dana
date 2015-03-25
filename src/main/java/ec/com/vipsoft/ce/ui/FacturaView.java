@@ -13,30 +13,41 @@ import java.util.StringTokenizer;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.sql.rowset.FilteredRowSet;
 
 import org.apache.shiro.SecurityUtils;
 
+import com.google.gwt.activity.shared.FilteredActivityMapper.Filter;
 import com.vaadin.cdi.CDIView;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.HeaderCell;
+import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
+import ec.com.vipsoft.ce.backend.service.ListadorBienEconomico;
 import ec.com.vipsoft.ce.comprobantesNeutros.FacturaBinding;
 import ec.com.vipsoft.ce.comprobantesNeutros.FacturaDetalleBinding;
 import ec.com.vipsoft.ce.services.recepcionComprobantesNeutros.ReceptorFacturaNeutra;
 import ec.com.vipsoft.ce.utils.UtilClaveAcceso;
+import ec.com.vipsoft.erp.abinadi.dominio.BienEconomico;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonAnadir;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonBuscar;
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonCancelar;
@@ -83,6 +94,8 @@ public class FacturaView extends VerticalLayout implements View{
     //private 
 	@EJB
 	private ReceptorFacturaNeutra recepcionFactura;
+	@EJB
+	private ListadorBienEconomico listadorBienes;
 	
 	@Inject
 	private UserInfo userInfo;
@@ -104,6 +117,8 @@ public class FacturaView extends VerticalLayout implements View{
     private Label total;
     @Inject
     private UtilClaveAcceso utilClaveAcceso;
+	private Button botonSeleccionaDesdeVentanar;
+	private TextField tfiltro;
     protected void actualizarTablaTotales(){
     	BigDecimal _subtotal=BigDecimal.ZERO;
     	BigDecimal _iva12=BigDecimal.ZERO;
@@ -364,6 +379,7 @@ public class FacturaView extends VerticalLayout implements View{
         	beanContainerDetalles.removeItem(tablaDetalles.getSelectedRow());
         	actualizarTablaTotales();        
         });
+
         botonRegistrar.addClickListener(event->{
         	FacturaBinding factura=new FacturaBinding();
         	factura.setCodigoEstablecimiento(userInfo.getCodigoEstablecimiento());
@@ -399,6 +415,38 @@ public class FacturaView extends VerticalLayout implements View{
         	 Notification.show(numeroDoc, numeroAcceso,Type.HUMANIZED_MESSAGE);
         	 
         	 
+        });
+        botonBuscarDetalle.addClickListener(event->{
+        	Table gridBusqueda=new Table();
+        	BeanItemContainer<BienEconomico>beaitem=new BeanItemContainer<BienEconomico>(BienEconomico.class);
+        	gridBusqueda.setContainerDataSource(beaitem);
+        	gridBusqueda.setVisibleColumns(new String[]{"codigo","descripcion"});
+        	gridBusqueda.setWidth("200px");
+        	 tfiltro=new TextField();
+        	botonSeleccionaDesdeVentanar = new Button("seleccionar");
+        	
+        	beaitem.addAll(listadorBienes.listarBienesDisponibles(userInfo.getRucEmisor()));
+        	
+        	HorizontalLayout lbus=new HorizontalLayout();
+        	lbus.setSpacing(true);
+        	lbus.addComponent(new Label("código"));
+        	lbus.addComponent(tfiltro);
+        	lbus.addComponent(botonSeleccionaDesdeVentanar);
+        	
+        	
+        	
+        	Window ventana=new Window();
+        	VerticalLayout layoutventana=new VerticalLayout();
+        	layoutventana.setSpacing(true);
+        	layoutventana.setMargin(true);
+        	layoutventana.addComponent(lbus);
+        	layoutventana.addComponent(gridBusqueda);
+        	ventana.setContent(layoutventana);
+            ventana.center();
+            UI.getCurrent().addWindow(ventana);
+            
+        	
+        	
         });
     }
     

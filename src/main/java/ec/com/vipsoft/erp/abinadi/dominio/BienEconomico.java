@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
  *
  */
 @Entity
-
-public class BienEconomico implements Serializable {
+@DiscriminatorColumn(name="tipo",length=1,discriminatorType=DiscriminatorType.STRING)
+public class BienEconomico implements Serializable ,Comparable<BienEconomico>{
 
 	   
 	
@@ -23,6 +23,7 @@ public class BienEconomico implements Serializable {
 	@NotNull
 	private String codigo;
 	private String codigoIce;
+	//@Column(name="codigoiva" ,columnDefinition="char(1) default '2' check codigoiva='0' or codigoiva='2' or codigoiva='6' or codigoiva='7'")
 	private String codigoIva;
 	@NotNull
 	private String descripcion;
@@ -69,6 +70,14 @@ public class BienEconomico implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	@Override
+	public int compareTo(BienEconomico o) {
+		int retorno=codigo.compareTo(o.codigo);
+		if(retorno==0){
+			retorno=descripcion.compareTo(o.descripcion);
+		}
+		return retorno;
 	}
    
 }
