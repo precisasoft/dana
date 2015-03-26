@@ -125,7 +125,7 @@ public class FacturaDetalleBinding implements Serializable{
 		this.codigo = sinCRLF(codigo);
 	}
 	public void setCodigoAlterno(String codigoAlterno) {
-		this.codigoAlterno = sinCRLF(codigoAlterno);
+		this.codigoAlterno = codigoAlterno;
 	}
 	public void setDescripcion(String descripcion) {
 		this.descripcion = sinCRLF(descripcion);

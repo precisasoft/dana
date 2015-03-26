@@ -123,7 +123,7 @@ public class EnviadorSRIEJB {
 	}
 
 
-	
+	//@Asynchronous
 	public RespuestaRecepcionDocumento enviarComprobanteAlSRI(String documentoXmlFirmado, boolean enPruebas) {
 		
 		if(enPruebas){

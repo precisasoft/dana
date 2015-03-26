@@ -47,6 +47,11 @@ public class ContenedorReportesRide implements Serializable{
 		this.rideNotaDebito = rideNotaDebito;
 	}
 	public JasperReport getRideGuiaRemision() {
+		if(rideGuiaRemision==null){
+			if(rideGuiaRemisionSinLogo!=null){
+				rideGuiaRemision=rideGuiaRemisionSinLogo;
+			}
+		}
 		return rideGuiaRemision;
 	}
 	public void setRideGuiaRemision(JasperReport rideGuiaRemision) {

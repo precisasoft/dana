@@ -71,9 +71,82 @@ public class Entidad implements Serializable, Comparable<Entidad> {
     private String dominioInternet;
     private String usuarioAdministrador;
     private boolean tieneLogo;
+    private String hostcorreo;
+    private boolean starttls;
+    private Integer puertoCorreo;
+    private boolean usaauthencorreo;
+    private String transportecorreo;
+    private String corremoEmisor;
+    private String passowrdCorreoEmisor;
+    private boolean habilitarNotificacionCorreo;
     
     
-    public boolean isTieneLogo() {
+    
+    public boolean isHabilitarNotificacionCorreo() {
+		return habilitarNotificacionCorreo;
+	}
+
+	public void setHabilitarNotificacionCorreo(boolean habilitarNotificacionCorreo) {
+		this.habilitarNotificacionCorreo = habilitarNotificacionCorreo;
+	}
+
+	public String getHostcorreo() {
+		return hostcorreo;
+	}
+
+	public void setHostcorreo(String hostcorreo) {
+		this.hostcorreo = hostcorreo;
+	}
+
+	public boolean isStarttls() {
+		return starttls;
+	}
+
+	public void setStarttls(boolean starttls) {
+		this.starttls = starttls;
+	}
+
+	public Integer getPuertoCorreo() {
+		return puertoCorreo;
+	}
+
+	public void setPuertoCorreo(Integer puertoCorreo) {
+		this.puertoCorreo = puertoCorreo;
+	}
+
+	public boolean isUsaauthencorreo() {
+		return usaauthencorreo;
+	}
+
+	public void setUsaauthencorreo(boolean usaauthencorreo) {
+		this.usaauthencorreo = usaauthencorreo;
+	}
+
+	public String getTransportecorreo() {
+		return transportecorreo;
+	}
+
+	public void setTransportecorreo(String transportecorreo) {
+		this.transportecorreo = transportecorreo;
+	}
+
+	public String getCorremoEmisor() {
+		return corremoEmisor;
+	}
+
+	public void setCorremoEmisor(String corremoEmisor) {
+		this.corremoEmisor = corremoEmisor;
+	}
+
+	public String getPassowrdCorreoEmisor() {
+		return passowrdCorreoEmisor;
+	}
+
+	public void setPassowrdCorreoEmisor(String passowrdCorreoEmisor) {
+		this.passowrdCorreoEmisor = passowrdCorreoEmisor;
+	}
+
+	public boolean isTieneLogo() {
 		return tieneLogo;
 	}
 

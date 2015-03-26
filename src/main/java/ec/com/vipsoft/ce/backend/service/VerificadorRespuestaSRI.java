@@ -38,7 +38,7 @@ public class VerificadorRespuestaSRI {
 	private VerificadorRespuestaIndividual verificadorRespuestaIndividual;
 
 	
-	//@Schedule(dayOfMonth="*",hour="*",minute="*",second="0,30",year="*",month="*")
+	@Schedule(dayOfMonth="*",hour="*",minute="*",second="0,20,40",year="*",month="*")
 	public void verificarAutorizacionesPendientes(){
 		if(!verificadorIndisponibilidad.estamosEnContingencia()){
 			JAXBContext contexto=null;

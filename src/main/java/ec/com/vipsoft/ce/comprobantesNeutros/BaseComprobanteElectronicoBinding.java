@@ -40,6 +40,7 @@ public class BaseComprobanteElectronicoBinding implements Serializable{
 	@Pattern(regexp="[0-9]{13,13}")
 	protected String rucEmisor;	
 	protected String secuenciaDocumento;
+	protected String emailBeneficiario;
 	private InfoTributariaBinding infoTributaria;
 	public InfoTributariaBinding getInfoTributaria() {
 		if(infoTributaria==null){
@@ -218,6 +219,14 @@ public class BaseComprobanteElectronicoBinding implements Serializable{
 
 	public void setInfoTributaria(InfoTributariaBinding infoTributaria) {
 		this.infoTributaria = infoTributaria;
+	}
+
+	public String getEmailBeneficiario() {
+		return emailBeneficiario;
+	}
+
+	public void setEmailBeneficiario(String emailBeneficiario) {
+		this.emailBeneficiario = emailBeneficiario;
 	}
     
 

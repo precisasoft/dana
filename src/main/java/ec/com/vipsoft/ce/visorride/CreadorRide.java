@@ -463,7 +463,11 @@ public class CreadorRide {
 		try {
 			jasperPrint = JasperFillManager.fillReport(reporte, parametros,datos);
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
+//			if(reporte==null){
+//				if(utilClaveAcceso.obtenerTipoDocumento(claveAcceso).equalsIgnoreCase("04")){
+//					reporte=JRL
+//				}
+		//	}
 			e.printStackTrace();
 		}
 		return jasperPrint;		

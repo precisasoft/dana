@@ -205,6 +205,9 @@ public class NotaCredito {
      *     
      */
     public InfoTributaria getInfoTributaria() {
+    	if(infoTributaria==null){
+    		infoTributaria=new InfoTributaria();
+    	}
         return infoTributaria;
     }
 
@@ -229,6 +232,9 @@ public class NotaCredito {
      *     
      */
     public NotaCredito.InfoNotaCredito getInfoNotaCredito() {
+    	if(infoNotaCredito==null){
+    		infoNotaCredito=new InfoNotaCredito();
+    	}
         return infoNotaCredito;
     }
 
@@ -253,6 +259,9 @@ public class NotaCredito {
      *     
      */
     public NotaCredito.Detalles getDetalles() {
+    	if(detalles==null){
+    		detalles=new Detalles();
+    	}
         return detalles;
     }
 
@@ -277,6 +286,9 @@ public class NotaCredito {
      *     
      */
     public NotaCredito.InfoAdicional getInfoAdicional() {
+    	if(infoAdicional==null){
+    		infoAdicional=new InfoAdicional();
+    	}
         return infoAdicional;
     }
 
@@ -762,6 +774,9 @@ public class NotaCredito {
              *     
              */
             public NotaCredito.Detalles.Detalle.DetallesAdicionales getDetallesAdicionales() {
+            	if(detallesAdicionales==null){
+            		detallesAdicionales=new DetallesAdicionales();
+            	}
                 return detallesAdicionales;
             }
 
@@ -786,6 +801,9 @@ public class NotaCredito {
              *     
              */
             public NotaCredito.Detalles.Detalle.Impuestos getImpuestos() {
+            	if(impuestos==null){
+            		impuestos=new Impuestos();
+            	}
                 return impuestos;
             }
 
@@ -1618,6 +1636,9 @@ public class NotaCredito {
          *     
          */
         public TotalConImpuestos getTotalConImpuestos() {
+        	if(totalConImpuestos==null){
+        		totalConImpuestos=new TotalConImpuestos();
+        	}
             return totalConImpuestos;
         }
 

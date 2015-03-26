@@ -8,10 +8,8 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
 import ec.com.vipsoft.erp.gui.componentesbasicos.BotonSalir;
 
@@ -55,15 +53,10 @@ public class MenuView extends VerticalLayout implements View{
 		});
 		
 		Button botonComprobantes=new Button("comprobantes");
-		botonComprobantes.addClickListener(new ClickListener() {
-			
-			@Override
-			public void buttonClick(ClickEvent event) {
-					UI.getCurrent().getNavigator().navigateTo("comprobantes");
-				
-			}
-		});
-		
+		botonComprobantes.addClickListener(event -> UI.getCurrent().getNavigator().navigateTo("comprobantes"));
+		Button botonNC=new Button("NC");
+		botonNC.addClickListener(event->{UI.getCurrent().getNavigator().navigateTo("NC");});
+		addComponent(botonNC);
 		addComponent(botonComprobantes);
 		addComponent(botonSalir);	
 	}
