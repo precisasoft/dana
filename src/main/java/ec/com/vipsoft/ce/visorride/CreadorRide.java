@@ -34,6 +34,8 @@ import ec.com.vipsoft.sri.comprobanteRetencion._v1_0.ComprobanteRetencion;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle;
 import ec.com.vipsoft.sri.factura._v1_1_0.Impuesto;
+import ec.com.vipsoft.sri.guiaremision._v1_1_0.Destinatario;
+import ec.com.vipsoft.sri.guiaremision._v1_1_0.Destinatario.Detalles;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision.InfoAdicional.CampoAdicional;
 import ec.com.vipsoft.sri.notaDebito.v_1_0.NotaDebito;
@@ -337,9 +339,17 @@ public class CreadorRide {
 			JAXBContext contextoGuiaRemision=JAXBContext.newInstance(GuiaRemision.class);
 			Unmarshaller unmarshallerGR=contextoGuiaRemision.createUnmarshaller();
 			GuiaRemision comprobante=(GuiaRemision)unmarshallerGR.unmarshal(new InputSource(new StringReader(autorizacion.getComprobante())));
-			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("numeroDocumento", comprobante.getInfoTributaria().getEstab()+"-"+comprobante.getInfoTributaria().getPtoEmi()+"-"+ comprobante.getInfoTributaria().getSecuencial());
 			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
 			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			parametros.put("direccionSucursal", comprobante.getInfoGuiaRemision().getDirEstablecimiento());
+			parametros.put("identificacionTransportista", comprobante.getInfoGuiaRemision().getRucTransportista());
+			parametros.put("razonSocialTransportista",comprobante.getInfoGuiaRemision().getRazonSocialTransportista());
+			parametros.put("placa",comprobante.getInfoGuiaRemision().getPlaca());
+			parametros.put("puntoPartida",comprobante.getInfoGuiaRemision().getDirPartida());
+			parametros.put("fechaInicioTransporte",comprobante.getInfoGuiaRemision().getDirPartida());
+			parametros.put("fechaFinTransporte",comprobante.getInfoGuiaRemision().getDirPartida());
+					
 			
 			
 			int i=1;
@@ -348,11 +358,33 @@ public class CreadorRide {
 				i++;
 			}
 			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
-			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
-			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());
-			parametros.put("obligadoContabilidad",comprobante.getInfoGuiaRemision().getObligadoContabilidad());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());	
+			if (comprobante.getInfoTributaria().getTipoEmision().equalsIgnoreCase("1")) {
+				parametros.put("tipoEmision", "NORMAL");
+			} else {
+				parametros.put("tipoEmision", "CONTINGENCIA");
+			}
+			parametros.put("obligadoContabilidad",comprobante.getInfoGuiaRemision().getObligadoContabilidad().toString());
 			parametros.put("resolucionEspecial",comprobante.getInfoGuiaRemision().getContribuyenteEspecial());
-			
+			ArrayList<ReporteGuiaRemisionDetalleBean>_beans=new ArrayList<>();
+			for(Destinatario destinatario : comprobante.getDestinatarios().getDestinatario()){
+					for (ec.com.vipsoft.sri.guiaremision._v1_1_0.Detalle d : destinatario.getDetalles().getDetalle()) {						
+						ReporteGuiaRemisionDetalleBean bean = new ReporteGuiaRemisionDetalleBean();
+						bean.setIdentificacionDestinatario(destinatario.getIdentificacionDestinatario());
+						bean.setRazonSocialDestinatario(destinatario.getRazonSocialDestinatario());
+						bean.setDirDestinatario(destinatario.getDirDestinatario());
+						bean.setMotivoTraslado(destinatario.getMotivoTraslado());
+						bean.setCodDocSustento(destinatario.getCodDocSustento());
+						bean.setNumDocSustento(destinatario.getNumDocSustento());
+						bean.setNumAutDocSustento(destinatario.getNumAutDocSustento());
+						bean.setFechaEmisionDocSustento(destinatario.getFechaEmisionDocSustento());
+						bean.setCodigoInterno(d.getCodigoInterno());
+						bean.setDescripcion(d.getDescripcion());
+						bean.setCantidad(d.getCantidad());
+						_beans.add(bean);
+					}				
+			}			
+			datos=new JRBeanCollectionDataSource(_beans,false);		
 		}
 			break;
 			case "07": // retencion
