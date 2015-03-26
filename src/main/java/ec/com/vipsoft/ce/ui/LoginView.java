@@ -7,13 +7,7 @@ import javax.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.DefaultPasswordService;
-import org.apache.shiro.authc.credential.PasswordMatcher;
-import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
 
 import com.vaadin.cdi.CDIView;
@@ -29,8 +23,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
-import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
-import ec.com.vipsoft.erp.abinadi.procesos.UsarContingencia;
 
 @CDIView("login")
 public class LoginView extends VerticalLayout implements View {

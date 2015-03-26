@@ -3,7 +3,6 @@ package ec.com.vipsoft.ce.backend.service;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Schedule;

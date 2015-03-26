@@ -6,14 +6,12 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 
-import ec.com.vipsoft.ce.backend.managedbean.UserInfo;
 import ec.com.vipsoft.erp.abinadi.dominio.Entidad;
 import ec.com.vipsoft.erp.abinadi.dominio.Establecimiento;
 import ec.com.vipsoft.erp.abinadi.dominio.PuntoVenta;

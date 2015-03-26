@@ -19,6 +19,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.soap.SOAPException;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 import org.xml.sax.InputSource;
 
 import ec.com.vipsoft.ce.backend.service.ContenedorReportesRide;
@@ -35,18 +42,11 @@ import ec.com.vipsoft.sri.factura._v1_1_0.Factura;
 import ec.com.vipsoft.sri.factura._v1_1_0.Factura.Detalles.Detalle;
 import ec.com.vipsoft.sri.factura._v1_1_0.Impuesto;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.Destinatario;
-import ec.com.vipsoft.sri.guiaremision._v1_1_0.Destinatario.Detalles;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision.InfoAdicional.CampoAdicional;
 import ec.com.vipsoft.sri.notaDebito.v_1_0.NotaDebito;
 import ec.com.vipsoft.sri.notaDebito.v_1_0.NotaDebito.InfoAdicional;
 import ec.com.vipsoft.sri.notacredito._v1_1_0.NotaCredito;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Stateless
 public class CreadorRide {
 	

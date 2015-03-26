@@ -1,7 +1,5 @@
 package ec.com.vipsoft.ce.ui;
 
-import org.apache.shiro.SecurityUtils;
-
 import com.vaadin.cdi.CDIView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;

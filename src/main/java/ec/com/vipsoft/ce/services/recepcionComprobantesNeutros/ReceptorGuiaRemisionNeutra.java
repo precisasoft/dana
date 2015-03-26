@@ -41,7 +41,6 @@ import ec.com.vipsoft.sri.guiaremision._v1_1_0.Destinatario;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.Detalle;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.Detalle.DetallesAdicionales.DetAdicional;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision;
-import ec.com.vipsoft.sri.guiaremision._v1_1_0.GuiaRemision.Destinatarios;
 import ec.com.vipsoft.sri.guiaremision._v1_1_0.ObligadoContabilidad;
 
 @Stateless

@@ -3,7 +3,6 @@ package ec.com.vipsoft.ce.comprobantesNeutros;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

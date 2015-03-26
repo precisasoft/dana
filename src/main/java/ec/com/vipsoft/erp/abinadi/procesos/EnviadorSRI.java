@@ -1,16 +1,13 @@
 package ec.com.vipsoft.erp.abinadi.procesos;
 
-import java.util.logging.Logger;
-
-import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.delegate.JavaDelegate;
-
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -20,7 +17,11 @@ import javax.xml.ws.Dispatch;
 import javax.xml.ws.Service;
 import javax.xml.ws.soap.SOAPBinding;
 
-import org.w3c.dom.*;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.JavaDelegate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 public class EnviadorSRI implements JavaDelegate {
 	private static String URL_WSDL_RECEPCION_COMPROBATES= "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl";

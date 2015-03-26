@@ -2,8 +2,6 @@ package ec.com.vipsoft.ce.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.ui.Link;
-
 public class ComprobanteRideXmlBean implements Serializable{
 	/**
 	 * 

@@ -2,13 +2,9 @@ package ec.com.vipsoft.ce.backend.service;
 
 import java.util.Properties;
 
-import javax.ejb.Schedule;
-import javax.ejb.Stateless;
-
-import java.util.Properties;
-
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.ejb.Stateless;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Session;

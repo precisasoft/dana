@@ -8,8 +8,6 @@ import java.util.Date;
 
 import javax.validation.constraints.Pattern;
 
-import org.mozilla.jss.tests.SDR;
-
 
 public class ImpuestoRetencion implements Comparable<ImpuestoRetencion>,Serializable{
 

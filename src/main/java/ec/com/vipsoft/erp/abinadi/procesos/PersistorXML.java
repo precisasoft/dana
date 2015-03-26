@@ -2,17 +2,12 @@ package ec.com.vipsoft.erp.abinadi.procesos;
 
 
 
-import java.util.Date;
 import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 
 import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico;
-import ec.com.vipsoft.erp.abinadi.dominio.ComprobanteElectronico.TipoComprobante;
 public class PersistorXML implements JavaDelegate {
 
 
