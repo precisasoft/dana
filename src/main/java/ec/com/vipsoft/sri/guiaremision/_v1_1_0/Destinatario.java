@@ -366,6 +366,9 @@ public class Destinatario {
      *     
      */
     public Destinatario.Detalles getDetalles() {
+    	if(detalles==null){
+    		detalles=new Detalles();
+    	}
         return detalles;
     }
 

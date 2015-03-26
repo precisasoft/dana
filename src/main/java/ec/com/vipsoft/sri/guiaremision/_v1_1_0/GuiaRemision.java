@@ -137,6 +137,9 @@ public class GuiaRemision {
      *     
      */
     public InfoTributaria getInfoTributaria() {
+    	if(infoTributaria==null){
+    		infoTributaria=new InfoTributaria();
+    	}
         return infoTributaria;
     }
 
@@ -161,6 +164,9 @@ public class GuiaRemision {
      *     
      */
     public GuiaRemision.InfoGuiaRemision getInfoGuiaRemision() {
+    	if(infoGuiaRemision==null){
+    		infoGuiaRemision=new InfoGuiaRemision();
+    	}
         return infoGuiaRemision;
     }
 
@@ -185,6 +191,9 @@ public class GuiaRemision {
      *     
      */
     public GuiaRemision.Destinatarios getDestinatarios() {
+    	if(destinatarios==null){
+    		destinatarios=new Destinatarios();
+    	}
         return destinatarios;
     }
 
@@ -209,6 +218,9 @@ public class GuiaRemision {
      *     
      */
     public GuiaRemision.InfoAdicional getInfoAdicional() {
+    	if(infoAdicional==null){
+    		infoAdicional=new InfoAdicional();
+    	}
         return infoAdicional;
     }
 

@@ -201,6 +201,9 @@ public class Detalle {
      *     
      */
     public Detalle.DetallesAdicionales getDetallesAdicionales() {
+    	if(detallesAdicionales==null){
+    		detallesAdicionales=new DetallesAdicionales();
+    	}
         return detallesAdicionales;
     }
 

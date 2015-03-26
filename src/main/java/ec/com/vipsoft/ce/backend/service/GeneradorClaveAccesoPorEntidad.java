@@ -168,7 +168,7 @@ public class GeneradorClaveAccesoPorEntidad {
                 for (PuntoVenta ptoe : _Establecimiento.getPos()) {
                     if (ptoe.getCodigoPuntoVenta().equalsIgnoreCase(codigoPuntoVenta)) {
                         PuntoVenta elpuntoDeVenta = em.find(PuntoVenta.class, ptoe.getId());                        
-                        claveAcceso = generadorReal.generarClaveAccesoFactura(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), entidad.isGuiaRemisionEnPruebas(), elpuntoDeVenta.siguienteSecuenciaGuiaRemision(), entidad.siguienteCAGuiaRemision());
+                        claveAcceso = generadorReal.generarClaveAccesoGuiaRemision(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), entidad.isGuiaRemisionEnPruebas(), elpuntoDeVenta.siguienteSecuenciaGuiaRemision(), entidad.siguienteCAGuiaRemision());
                         break;
                     }
                 }
@@ -197,7 +197,7 @@ public class GeneradorClaveAccesoPorEntidad {
                 for (PuntoVenta ptoe : _Establecimiento.getPos()) {
                     if (ptoe.getCodigoPuntoVenta().equalsIgnoreCase(codigoPuntoVenta)) {
                         PuntoVenta elpuntoDeVenta = em.find(PuntoVenta.class, ptoe.getId());                        
-                        claveAcceso = generadorReal.generarClaveAccesoFactura(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), entidad.isGuiaRemisionEnPruebas(), Long.valueOf(secuenciaDoc), entidad.siguienteCAGuiaRemision());
+                        claveAcceso = generadorReal.generarClaveAccesoGuiaRemision(rucEmisor, Integer.valueOf(codigoEstablecimiento), Integer.valueOf(codigoPuntoVenta), entidad.isGuiaRemisionEnPruebas(), Long.valueOf(secuenciaDoc), entidad.siguienteCAGuiaRemision());
                         break;
                     }
                 }
