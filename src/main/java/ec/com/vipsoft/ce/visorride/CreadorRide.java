@@ -347,9 +347,9 @@ public class CreadorRide {
 			parametros.put("razonSocialTransportista",comprobante.getInfoGuiaRemision().getRazonSocialTransportista());
 			parametros.put("placa",comprobante.getInfoGuiaRemision().getPlaca());
 			parametros.put("puntoPartida",comprobante.getInfoGuiaRemision().getDirPartida());
-			parametros.put("fechaInicioTransporte",comprobante.getInfoGuiaRemision().getDirPartida());
-			parametros.put("fechaFinTransporte",comprobante.getInfoGuiaRemision().getDirPartida());
-					
+			parametros.put("fechaInicioTransporte",comprobante.getInfoGuiaRemision().getFechaIniTransporte());
+			parametros.put("fechaFinTransporte",comprobante.getInfoGuiaRemision().getFechaFinTransporte());
+			parametros.put("fechaEmision",comprobante.getDestinatarios().getDestinatario().get(0).getFechaEmisionDocSustento());		
 			
 			
 			int i=1;
@@ -378,6 +378,8 @@ public class CreadorRide {
 						bean.setNumDocSustento(destinatario.getNumDocSustento());
 						bean.setNumAutDocSustento(destinatario.getNumAutDocSustento());
 						bean.setFechaEmisionDocSustento(destinatario.getFechaEmisionDocSustento());
+						
+						bean.setFechaEmision(destinatario.getFechaEmisionDocSustento());
 						bean.setCodigoInterno(d.getCodigoInterno());
 						bean.setDescripcion(d.getDescripcion());
 						bean.setCantidad(d.getCantidad());

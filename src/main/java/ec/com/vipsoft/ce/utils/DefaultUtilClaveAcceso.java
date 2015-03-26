@@ -3,6 +3,11 @@ package ec.com.vipsoft.ce.utils;
 
 public class DefaultUtilClaveAcceso implements UtilClaveAcceso {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4451554984568988445L;
+
 	/* (non-Javadoc)
 	 * @see ec.com.vipsoft.ce.utils.UtilClaveAcceso#esEnPruebas(java.lang.String)
 	 */

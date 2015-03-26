@@ -1,6 +1,8 @@
 package ec.com.vipsoft.ce.utils;
 
-public interface UtilClaveAcceso {
+import java.io.Serializable;
+
+public interface UtilClaveAcceso extends Serializable{
 
 	public abstract boolean esEnPruebas(String claveAcceso);
 	public abstract String obtenerCodigoEstablecimiento(String claveAcceso);
