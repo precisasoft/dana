@@ -2,6 +2,7 @@ package ec.com.vipsoft.ce.visorride;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -292,23 +293,121 @@ public class CreadorRide {
 			break;
 		case "04":  //nota de credito
 		{
+			ArrayList<ReporteFacturaDetalleBean>detalles=new ArrayList<>();
 			JAXBContext contextoNc=JAXBContext.newInstance(NotaCredito.class);
 			Unmarshaller unmarshallerNC=contextoNc.createUnmarshaller();
 			NotaCredito comprobante=(NotaCredito)unmarshallerNC.unmarshal(new InputSource(new StringReader(autorizacion.getComprobante())));
-			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getDirMatriz());
+			parametros.put("numeroDocumento",comprobante.getInfoTributaria().getEstab()+"-"+comprobante.getInfoTributaria().getPtoEmi()+"-"+comprobante.getInfoTributaria().getSecuencial());
 			parametros.put("rucEmisor", comprobante.getInfoTributaria().getRuc());
 			parametros.put("razonSocialEmisor", comprobante.getInfoTributaria().getRazonSocial());
+			parametros.put("direccionSucursal",comprobante.getInfoNotaCredito().getDirEstablecimiento());
+			
 			int i=1;
 			for(ec.com.vipsoft.sri.notacredito._v1_1_0.NotaCredito.InfoAdicional.CampoAdicional campoAdicional:comprobante.getInfoAdicional().getCampoAdicional()){
 				parametros.put("adicional"+i, campoAdicional.getNombre()+" "+campoAdicional.getValue());
 				i++;
 			}
 			parametros.put("nombreComercial", comprobante.getInfoTributaria().getNombreComercial());
-			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());			
-			parametros.put("tipoEmision",comprobante.getInfoTributaria().getTipoEmision());		
-			parametros.put("obligadoContabilidad",comprobante.getInfoNotaCredito().getObligadoContabilidad());
-			parametros.put("resolucionEspecial",comprobante.getInfoNotaCredito().getContribuyenteEspecial());
+			parametros.put("direccionMatriz",comprobante.getInfoTributaria().getDirMatriz());
+			if(comprobante.getInfoTributaria().getTipoEmision().equalsIgnoreCase("1")){
+				parametros.put("tipoEmision","NORMAL");	
+			}else{
+				parametros.put("tipoEmision","CONTINGENCIA");
+			}
+						
+			parametros.put("obligadoContabilidad",comprobante.getInfoNotaCredito().getObligadoContabilidad().toString());			
+			parametros.put("resolucionEspecial", comprobante.getInfoNotaCredito().getContribuyenteEspecial());
+				// ///////////////////////////////////////////////////////////7
+				// /////////////////////////////////////////////////////////////
+				// trampita con rocarsystem
+				if (comprobante.getInfoTributaria().getRuc().equalsIgnoreCase("1791739477001")) {
+					parametros.put("resolucionEspecial", "826");
+				}									
+			parametros.put("identificacionCliente",comprobante.getInfoNotaCredito().getIdentificacionComprador());
+			parametros.put("razonSocialCliente",comprobante.getInfoNotaCredito().getRazonSocialComprador());
+			parametros.put("fechaEmision",comprobante.getInfoNotaCredito().getFechaEmision());
+			if(comprobante.getInfoNotaCredito().getCodDocModificado().equalsIgnoreCase("01")){
+				parametros.put("codDocModificado","FACTURA");
+			}
+			parametros.put("numDocModificado",comprobante.getInfoNotaCredito().getNumDocModificado());
+			parametros.put("fechaEmisionDocSustento",comprobante.getInfoNotaCredito().getFechaEmisionDocSustento());
+			parametros.put("motivo", comprobante.getInfoNotaCredito().getMotivo());
+			BigDecimal subtotal12=BigDecimal.ZERO;
+			BigDecimal subtotalIva0=BigDecimal.ZERO;
+			BigDecimal subtotalNoObjetoIVA=BigDecimal.ZERO;
+			BigDecimal subtotalExentoIva=BigDecimal.ZERO;
+			BigDecimal ice=BigDecimal.ZERO;
+			BigDecimal iva12=BigDecimal.ZERO;
 			
+			for(ec.com.vipsoft.sri.notacredito._v1_1_0.NotaCredito.Detalles.Detalle detalle :comprobante.getDetalles().getDetalle()){
+				ReporteFacturaDetalleBean _detalle=new ReporteFacturaDetalleBean();
+				_detalle.setCantidad(detalle.getCantidad());
+				_detalle.setCodigoPrincipal(detalle.getCodigoInterno());
+				_detalle.setCodigoAuxiliar(detalle.getCodigoAdicional());
+				_detalle.setDescripcion(detalle.getDescripcion());
+				_detalle.setDescuento(detalle.getDescuento());
+				_detalle.setPrecioUnitario(detalle.getPrecioUnitario());
+				_detalle.setPrecioTotal(detalle.getPrecioTotalSinImpuesto());
+				if(detalle.getDetallesAdicionales()!=null){
+					if(detalle.getDetallesAdicionales().getDetAdicional()!=null){
+						if(!detalle.getDetallesAdicionales().getDetAdicional().isEmpty()){
+							if(detalle.getDetallesAdicionales().getDetAdicional().get(0)!=null){
+								_detalle.setDetalleAdicional(detalle.getDetallesAdicionales().getDetAdicional().get(0).getValor());
+							}	
+						}						
+					}						
+				}				
+				//_detalle.setDetalleAdicional(detalle.getDetallesAdicionales().getDetAdicional().get(0).);				
+				for(ec.com.vipsoft.sri.notacredito._v1_1_0.Impuesto impuesto:detalle.getImpuestos().getImpuesto()){					
+					//iva
+					if(impuesto.getCodigo().equalsIgnoreCase("2")){
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("2")){
+							subtotal12=subtotal12.add(impuesto.getBaseImponible());
+							iva12=iva12.add(impuesto.getValor());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("0")){
+							subtotalIva0=subtotalIva0.add(impuesto.getBaseImponible());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("6")){
+							subtotalNoObjetoIVA=subtotalNoObjetoIVA.add(impuesto.getBaseImponible());
+						}
+						if(impuesto.getCodigoPorcentaje().equalsIgnoreCase("7")){
+							subtotalExentoIva=subtotalExentoIva.add(impuesto.getBaseImponible());
+						}
+					}
+					//ice
+					if(impuesto.getCodigo().equalsIgnoreCase("3")){
+						ice=ice.add(impuesto.getValor());							
+					}
+					//IRBPNR
+					if(impuesto.getCodigo().equalsIgnoreCase("5")){
+						
+					}
+				}
+				detalles.add(_detalle);
+			}
+			parametros.put("subtotal12",subtotal12);
+			parametros.put("subtotal0", subtotalIva0);
+			parametros.put("subtotalNoObjetoIVA", subtotalNoObjetoIVA);
+			parametros.put("subtotalExentoIVA", subtotalExentoIva);
+			BigDecimal totalSinImpuestos=BigDecimal.ZERO;
+			totalSinImpuestos=totalSinImpuestos.add(subtotal12);
+			totalSinImpuestos=totalSinImpuestos.add(subtotalIva0);
+			totalSinImpuestos=totalSinImpuestos.add(subtotalNoObjetoIVA);
+			totalSinImpuestos=totalSinImpuestos.add(subtotalExentoIva);
+			
+			
+			
+			
+			parametros.put("subtotalSinImpuestos", totalSinImpuestos);
+			parametros.put("totalDescuento", new BigDecimal("0.00"));
+			parametros.put("ice",ice);
+			parametros.put("iva12",iva12);
+			parametros.put("irbpnr", BigDecimal.ZERO);
+			parametros.put("propina",BigDecimal.ZERO);
+			BigDecimal grantotal=subtotal12.add(subtotalIva0).add(subtotalNoObjetoIVA).add(subtotalExentoIva).add(ice).add(iva12);			
+			parametros.put("valorTotal",grantotal.setScale(2,RoundingMode.HALF_UP));
+			datos=new JRBeanCollectionDataSource(detalles,false);
 		}	
 			break;
 		case "05":  //nota de debito

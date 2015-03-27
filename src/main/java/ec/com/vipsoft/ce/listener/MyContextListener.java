@@ -72,12 +72,18 @@ public class MyContextListener extends org.apache.shiro.web.env.EnvironmentLoade
 			JasperReport  jasperretencionnologo=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_retencion_1_0_nologo.jasper"));
 			JasperReport  jasperGuianologo=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_guiaremision_1_1_0_nologo.jasper"));
 			JasperReport jasperGuia=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_guiaremision_1_1_0.jasper"));
+			
+			JasperReport jaspernc=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_nc_1_1_0.jasper"));
+			JasperReport jasperncnologo=(JasperReport)JRLoader.loadObject(arg0.getServletContext().getResourceAsStream("ride_nc_1_1_0_nologo.jasper"));
 			contenedorRide.setRideFactura(jasperFactura);
 			contenedorRide.setRideFacturaSinLogo(jasperFacturasinLogo);
 			contenedorRide.setRideRetencion(jasperretencion);
 			contenedorRide.setRideRetencionSinLogo(jasperretencionnologo);
 			contenedorRide.setRideGuiaRemision(jasperGuia);
 			contenedorRide.setRideGuiaRemisionSinLogo(jasperGuianologo);
+			contenedorRide.setRideNotaCredito(jaspernc);
+			contenedorRide.setRideNotaCreditoSinLogo(jasperncnologo);
+			
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
