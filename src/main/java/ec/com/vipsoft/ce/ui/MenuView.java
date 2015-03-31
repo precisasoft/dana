@@ -21,6 +21,7 @@ public class MenuView extends VerticalLayout implements View{
 	private BotonSalir botonSalir;
 	private Button botonComprobanteRetencion;
 	private Button botonGuiaRemision;
+	private Button secuencias;
 
 	public MenuView() {
 		super();
@@ -46,6 +47,8 @@ public class MenuView extends VerticalLayout implements View{
 		botonSalir=new BotonSalir();
 		botonSalir.addClickListener(event -> {			
 			//SecurityUtils.getSubject().logout();
+		//
+			
 			UI.getCurrent().getNavigator().navigateTo("login");
 			VaadinSession.getCurrent().getSession().invalidate();
 		});
@@ -56,6 +59,9 @@ public class MenuView extends VerticalLayout implements View{
 		botonNC.addClickListener(event->{UI.getCurrent().getNavigator().navigateTo("NC");});
 		addComponent(botonNC);
 		addComponent(botonComprobantes);
+		secuencias=new Button("Secuencias/produccion");
+		secuencias.addClickListener(event->UI.getCurrent().getNavigator().navigateTo("secuencias"));
+		addComponent(secuencias);
 		addComponent(botonSalir);	
 	}
 

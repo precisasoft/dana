@@ -1,6 +1,8 @@
 package ec.com.vipsoft.ce.backend.service;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -27,6 +29,16 @@ public class VerificadorIndisponibilidad {
 			retorno=true;
 		}
 		return retorno;
+	}
+	public void darUnToqueIndisponibilidad(){
+		GregorianCalendar ahora=new GregorianCalendar();
+		
+		CalendarioIndisponibilidad calendarioahora=new CalendarioIndisponibilidad();
+		calendarioahora.setFechaInicial(ahora.getTime());
+		ahora.add(Calendar.SECOND,20);
+		calendarioahora.setFechaFinal(ahora.getTime());
+		em.persist(calendarioahora);
+		
 	}
 
 }

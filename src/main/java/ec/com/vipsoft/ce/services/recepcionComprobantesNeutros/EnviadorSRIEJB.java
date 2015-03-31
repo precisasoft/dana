@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.Base64;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -22,11 +23,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import ec.com.vipsoft.ce.backend.service.VerificadorIndisponibilidad;
 import ec.com.vipsoft.erp.abinadi.procesos.DetalleRecepcion;
 import ec.com.vipsoft.erp.abinadi.procesos.RespuestaRecepcionDocumento;
 
 @Stateless
 public class EnviadorSRIEJB {
+	@EJB
+	private VerificadorIndisponibilidad verificadorEnContingencia;
 
 	private static String URL_WSDL_RECEPCION_COMPROBATES= "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl";
 	private static String URL_OPERACION_RECEPCION_COMPROBATES = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes";
@@ -40,14 +44,11 @@ public class EnviadorSRIEJB {
 		Service service = Service.create(serviceName);
 
 		// Add a port to the Service
-		service.addPort(portName, SOAPBinding.SOAP11HTTP_BINDING,
-				endpointAddress);
-		Dispatch<SOAPMessage> dispatch = service.createDispatch(portName,
-				SOAPMessage.class, Service.Mode.MESSAGE);
+		service.addPort(portName, SOAPBinding.SOAP11HTTP_BINDING,endpointAddress);
+		Dispatch<SOAPMessage> dispatch = service.createDispatch(portName,SOAPMessage.class, Service.Mode.MESSAGE);
 		// Use Dispatch as BindingProvider
 
-		StringBuilder sbrequest = new StringBuilder(
-				"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ec=\"http://ec.gob.sri.ws.recepcion\">");
+		StringBuilder sbrequest = new StringBuilder("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ec=\"http://ec.gob.sri.ws.recepcion\">");
 		sbrequest.append("<soapenv:Header/>");
 		sbrequest.append("<soapenv:Body>");
 		sbrequest.append("<ec:validarComprobante>");
@@ -137,7 +138,7 @@ public class EnviadorSRIEJB {
 		try {
 			respuestaRecepcion = enviarDocumento(documentoXmlFirmado.getBytes());
 		} catch (SOAPException e) {
-			// TODO Auto-generated catch block
+			verificadorEnContingencia.darUnToqueIndisponibilidad();
 			e.printStackTrace();
 		}
 		return respuestaRecepcion;

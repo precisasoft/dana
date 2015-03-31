@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -49,6 +50,9 @@ public class ComprobanteElectronico implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
     @Column(name="fecha_e")
 	private Date fechaEnvio;
+	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name="fecha_r")
+	private Date fechaRegistro;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -261,5 +265,10 @@ public class ComprobanteElectronico implements Serializable {
 	public void setReintentos(Integer reintentos) {
 		this.reintentos = reintentos;
 	}
-	
+	@PrePersist
+	public void antesPersistir(){
+		fechaRegistro=new Date();
+		notificadoBeneficiario=false;
+		notificadoCorreoInterno=false;
+	}
 }

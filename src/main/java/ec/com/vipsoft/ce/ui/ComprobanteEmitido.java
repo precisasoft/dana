@@ -59,7 +59,7 @@ public class ComprobanteEmitido implements Serializable,Comparable<ComprobanteEm
 	}
 	@Override
 	public int compareTo(ComprobanteEmitido o) {
-		int retorno=tipo.compareTo(o.tipo);
+		int retorno=0;
 		if(retorno==0){
 			if((numeroAutorizacion!=null)&&(o.numeroAutorizacion!=null)){
 				retorno=numeroAutorizacion.compareTo(o.numeroAutorizacion);

@@ -52,18 +52,14 @@ public class VerificadorRespuestaSRI {
 			List<ComprobanteElectronico>lista=q.getResultList();		
 			if(!lista.isEmpty()){
 				for(ComprobanteElectronico c:lista){
-					String autorizacion=verificadorRespuestaIndividual.verificarAutorizacionComprobante(c.getClaveAcceso());
-					
-					//convertir en pdf
-					
-					
+					String autorizacion=verificadorRespuestaIndividual.verificarAutorizacionComprobante(c.getClaveAcceso());			
 				}
 				
 				
 			}	
 		}
 
-
+			
 
 	}
 }

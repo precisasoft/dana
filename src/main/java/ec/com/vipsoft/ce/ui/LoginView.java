@@ -96,12 +96,13 @@ public class LoginView extends VerticalLayout implements View {
 						//amarrar el login con las variables de usuario
 						
 						UI.getCurrent().getNavigator().navigateTo("menu");
-					}else{
-						if(currentUser.hasRole("usuario")){
-							//no se amarra a ninguna variable ... por lo menos por ahora
-							UI.getCurrent().getNavigator().navigateTo("portal");
-						}
 					}
+//					}else{
+//						if(currentUser.hasRole("usuario")){
+//							//no se amarra a ninguna variable ... por lo menos por ahora
+//							UI.getCurrent().getNavigator().navigateTo("portal");
+//						}
+//					}
 				}catch(AuthenticationException e){
 					Notification.show("error", e.getMessage(),Type.ERROR_MESSAGE);
 				}

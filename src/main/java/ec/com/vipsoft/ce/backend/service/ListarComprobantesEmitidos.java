@@ -39,8 +39,11 @@ public class ListarComprobantesEmitidos {
 				bean.setNumeroDocumento(c.getPuntoEMision()+"-"+c.getPuntoEMision()+"-"+c.getSecuencia());
 				if(c.getFechaAutorizacion()!=null){
 					bean.setFechaAutorizacion(sdf.format(c.getFechaAutorizacion()));	
-				}			
-				bean.setFechaEmision(sdf.format(c.getFechaEnvio()));
+				}	
+				if(c.getFechaEnvio()!=null){
+					bean.setFechaEmision(sdf.format(c.getFechaEnvio()));	
+				}
+				
 				bean.setId(c.getId());
 				if(c.getNumeroAutorizacion()!=null){
 					bean.setNumeroAutorizacion(c.getNumeroAutorizacion());	

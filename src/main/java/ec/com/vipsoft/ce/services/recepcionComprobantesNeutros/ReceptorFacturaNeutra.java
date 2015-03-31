@@ -186,7 +186,7 @@ public class ReceptorFacturaNeutra {
 				}
 				totalDescuento = totalDescuento.add(d.getDescuento());
 				sumaSinImpuesto = sumaSinImpuesto.add(d.calculaBaeImponible());
-				sumatoria = sumatoria.add(d.getValorTotal());
+				
 				if (d.getInfoAdicional1() != null) {
 					DetAdicional dead = new DetAdicional();
 					dead.setNombre("info");
@@ -240,9 +240,11 @@ public class ReceptorFacturaNeutra {
 						impuesto.setValor(new BigDecimal("0.00"));			    							
 						baseIva0=baseIva0.add(impuesto.getBaseImponible());	
 					}
+					
 					detalle.getImpuestos().getImpuesto().add(impuesto);
 				}
-
+				d.calcularValorTotal();
+				sumatoria = sumatoria.add(d.getValorTotal());
 				facturaxml.getDetalles().getDetalle().add(detalle);		
 			}
 			if(baseIva0.doubleValue()>0){
@@ -312,7 +314,7 @@ public class ReceptorFacturaNeutra {
 
 			}
 
-
+			
 
 			facturaxml.getInfoFactura().setImporteTotal(sumatoria);
 			facturaxml.getInfoFactura().setTotalDescuento(totalDescuento);		

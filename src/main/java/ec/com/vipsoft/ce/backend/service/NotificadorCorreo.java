@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -20,7 +21,7 @@ public class NotificadorCorreo {
 //	public void notificarCorreo(Properties propiedadesConnection, String claveAcceso,String numeroAutorizacion){
 //		
 //	}
-	//@Schedule(dayOfMonth="*",hour="*",minute="*",second="0,30",year="*",month="*")
+	//@Schedule(dayOfMonth="*",hour="*",minute="*",second="15,35,55",year="*",month="*")
 	public void enviarEmailtest(){
 		  try {
 	            
